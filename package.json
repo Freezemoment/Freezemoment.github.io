@@ -1,0 +1,31 @@
+{
+  "name": "freezemoment.github.io",
+  "version": "1.0.0",
+  "description": "FreezeMoment photography portfolio",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate:galleries": "node scripts/generate_galleries.js",
+    "prestart": "npm run generate:galleries",
+    "start": "npx serve . -l 5173"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Freezemoment/Freezemoment.github.io.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Freezemoment/Freezemoment.github.io/issues"
+  },
+  "homepage": "https://github.com/Freezemoment/Freezemoment.github.io#readme",
+  "dependencies": {
+    "exifr": "^7.1.3",
+    "natural-compare-lite": "^1.4.0"
+  },
+  "devDependencies": {
+    "sharp": "^0.34.3"
+  }
+}

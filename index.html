@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Freezemoment — Photography</title>
+
+    <!-- theme color for mobile -->
+    <meta name="theme-color" content="#0b0b0b" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/styles.css" />
+
+    <!-- Inline SVG filter to be available for CSS filter: url(#distort) -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <filter id="distort">
+            <feTurbulence baseFrequency="0.9" numOctaves="1" result="turb" seed="2" />
+            <feDisplacementMap in="SourceGraphic" in2="turb" scale="12" xChannelSelector="R" yChannelSelector="G" />
+            <animate xlink:href="#distort feTurbulence" attributeName="baseFrequency" values="0.9;1.05;0.9" dur="6s"
+                repeatCount="indefinite" />
+        </filter>
+    </svg>
+
+</head>
+
+<body>
+    <header class="app-header transparent" id="site-header">
+        <div class="app-header inner container-max">
+            <a class="logo" href="#home" id="logo">Freezemoment</a>
+
+            <nav class="nav-desktop" aria-label="Main navigation">
+                <button class="nav-pill" data-target="portfolio">Portfolio</button>
+                <button class="nav-pill" data-target="about">About</button>
+                <button class="nav-pill" data-target="contact">Contact</button>
+            </nav>
+
+            <div class="socials header-socials">
+                <a href="#" id="insta-link" target="_blank" rel="noreferrer">Instagram</a>
+                <a href="tel:+447887335510">+44 7887 335510</a>
+            </div>
+
+            <div class="nav-mobile">
+                <select id="mobile-nav" aria-label="Jump to">
+                    <option value="home">Home</option>
+                    <option value="portfolio">Portfolio</option>
+                    <option value="about">About</option>
+                    <option value="contact">Contact</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <main id="main">
+        <!-- HERO -->
+        <section id="home" class="hero">
+            <div class="hero-bg" id="hero-bg" style="background-image:url('/assets/hero.jpg')"></div>
+            <div class="hero-overlay"></div>
+
+            <div class="hero-inner container-max">
+                <h1 id="hero-title" class="hero-title" style="filter: url(#distort)">Photography that stays with you
+                </h1>
+                <p class="hero-sub">Portraits · Travel · Editorial</p>
+                <div class="cta-wrap">
+                    <button class="btn-hero" id="cta-view">View Collections</button>
+                </div>
+
+                <div class="scroll-indicator" id="scroll-indicator" title="Scroll to collections" role="button"
+                    aria-label="Scroll to collections">
+                    <svg viewBox="0 0 24 24" aria-hidden focusable="false">
+                        <path d="M12 16.5l-6-6 1.4-1.4L12 13.7l4.6-4.6L18 10.5z"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="noise-overlay" aria-hidden="true"></div>
+        </section>
+
+        <!-- PORTFOLIO -->
+        <section id="portfolio" class="gallery-section">
+            <div class="container-max">
+                <div class="collections-header"
+                    style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px;">
+                    <div>
+                        <h2>Collections</h2>
+                        <p class="muted">Click a collection to open the full gallery.</p>
+                    </div>
+                </div>
+
+                <!-- grid where collection tiles will be injected -->
+                <div id="collections-grid" class="masonry" role="list" aria-live="polite"></div>
+            </div>
+        </section>
+
+        <!-- collection page (replaced by JS when user opens a collection) -->
+        <section id="collection-view" class="gallery-section" style="display:none;">
+            <div class="container-max" id="collection-content"></div>
+        </section>
+
+        <!-- ABOUT -->
+        <section id="about" class="py-14 container-max">
+            <div class="about-grid">
+                <img src="/assets/about.jpg" alt="About the photographer" class="about-img" />
+                <div class="about-text">
+                    <h3>About the Photographer</h3>
+                    <p>Driven by light and story. Available worldwide for commissions. Follow on Instagram for the
+                        latest work.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT -->
+        <section id="contact" class="py-12 container-max">
+            <h3>Contact</h3>
+            <div class="contact-row">
+                <div class="socials">
+                    <a href="#" id="insta-link-2" target="_blank">Instagram</a>
+                    <a href="tel:+447887335510">+44 7887 335510</a>
+                    <a href="mailto:hello@freeze-moment.com">hello@freeze-moment.com</a>
+                </div>
+                <p class="muted">Prefer DMs? send a message on Instagram or email — quickest response via phone for
+                    bookings.</p>
+            </div>
+        </section>
+
+        <footer class="site-footer container-max">
+            <div class="footer-row">
+                <div>© <span id="year"></span> Freezemoment — Photographer</div>
+                <div class="socials"><a href="#" id="insta-link-3">Instagram</a><a
+                        href="mailto:hello@freeze-moment.com">hello@freeze-moment.com</a></div>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- LIGHTBOX (in DOM, shown/hide by JS) -->
+    <div id="lightbox" class="lb-overlay" style="display:none;" role="dialog" aria-modal="true">
+        <div class="lb-inner" id="lb-inner">
+            <img id="lb-image" class="lb-image" src="" alt="" />
+            <div id="lb-caption" style="color:#fff; text-align:center; margin-top:8px;"></div>
+            <div class="lb-controls">
+                <button class="lb-btn" id="lb-prev">Prev</button>
+                <button class="lb-btn" id="lb-next">Next</button>
+                <button class="lb-btn" id="lb-share">Share</button>
+                <button class="lb-btn" id="lb-close">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main JS -->
+    <script src="/main.js" defer></script>
+</body>
+
+</html>

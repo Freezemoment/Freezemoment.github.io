@@ -1,0 +1,426 @@
+/* styles.css - full site styling (paste into /styles.css) */
+
+/* fonts import */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@600;700&display=swap');
+
+:root {
+    --gold: #D4A95A;
+    --gold-2: #E6BD6E;
+    --black: #0b0b0b;
+    --muted: #9CA3AF;
+    --maxw: 1200px;
+    --hero-min: 60vh;
+    --cover-height: 260px;
+    --noise-opacity: 0.08;
+    --shadow-strong: 0 30px 80px rgba(0, 0, 0, 0.65);
+}
+
+/* base reset */
+* {
+    box-sizing: border-box;
+}
+
+html,
+body,
+#main {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    background: var(--black);
+    color: #f7f7f7;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* util container */
+.container-max {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* header */
+.app-header {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 80;
+    padding: 10px 0;
+}
+
+.app-header.inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.app-header.transparent {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));
+}
+
+.app-header.solid {
+    background: rgba(6, 6, 6, 0.92);
+    box-shadow: 0 6px 28px rgba(0, 0, 0, 0.6);
+}
+
+.logo {
+    font-family: "Playfair Display", serif;
+    font-weight: 700;
+    color: var(--gold);
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.nav-desktop {
+    display: flex;
+    gap: 8px;
+}
+
+.nav-pill {
+    padding: .45rem .85rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    color: #fff;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.nav-pill:hover {
+    transform: translateY(-3px);
+}
+
+.header-socials {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    color: var(--muted);
+}
+
+.nav-mobile {
+    display: none;
+}
+
+/* responsive */
+@media(max-width:768px) {
+    .nav-desktop {
+        display: none
+    }
+
+    .nav-mobile {
+        display: block
+    }
+}
+
+/* hero */
+.hero {
+    min-height: var(--hero-min);
+    position: relative;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+}
+
+.hero-bg {
+    position: absolute;
+    inset: 0;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    transform: translateY(0);
+    transition: transform .12s linear;
+    filter: saturate(.95) contrast(.95);
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.44), rgba(0, 0, 0, 0.34));
+}
+
+.hero-inner {
+    position: relative;
+    z-index: 20;
+    text-align: center;
+    padding: 0 1.25rem;
+    max-width: var(--maxw);
+}
+
+.hero-title {
+    font-family: "Playfair Display", serif;
+    font-size: 2.25rem;
+    margin: 0;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: all .7s cubic-bezier(.2, .9, .2, 1);
+    text-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+    filter: url(#distort);
+}
+
+@media(min-width:768px) {
+    .hero-title {
+        font-size: 3.75rem
+    }
+}
+
+.hero-sub,
+.cta-wrap {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: all .6s cubic-bezier(.2, .9, .2, 1);
+    color: rgba(255, 255, 255, 0.92);
+}
+
+.cta-wrap {
+    margin-top: 1rem;
+    display: inline-flex;
+    gap: .75rem;
+    align-items: center;
+}
+
+.btn-hero {
+    background: linear-gradient(90deg, var(--gold), var(--gold-2));
+    color: #071018;
+    border: none;
+    padding: .72rem 1.05rem;
+    border-radius: .5rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.is-visible {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
+/* scroll indicator */
+.scroll-indicator {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: rgba(255, 255, 255, 0.06);
+    cursor: pointer;
+}
+
+.scroll-indicator svg {
+    fill: var(--gold);
+    width: 18px;
+    height: 18px;
+    animation: bob 1.6s infinite;
+}
+
+@keyframes bob {
+    0% {
+        transform: translateY(0)
+    }
+
+    50% {
+        transform: translateY(6px)
+    }
+
+    100% {
+        transform: translateY(0)
+    }
+}
+
+/* noise overlay (optional) */
+.noise-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+    opacity: var(--noise-opacity);
+    background-image: url('/assets/noise-400.png');
+    background-size: 400px 400px;
+}
+
+/* gallery */
+.gallery-section {
+    padding: 3.5rem 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(0, 0, 0, 0.03));
+}
+
+.masonry {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 22px;
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+@media(min-width:700px) {
+    .masonry {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media(min-width:1100px) {
+    .masonry {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.masonry-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.06));
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
+    transition: transform .28s cubic-bezier(.2, .9, .2, 1);
+    cursor: pointer;
+}
+
+.masonry-item:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-strong);
+}
+
+.masonry-item img {
+    width: 100%;
+    height: var(--cover-height);
+    object-fit: cover;
+    display: block;
+    min-height: 160px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.06));
+}
+
+.ribbon {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-2));
+    color: #071018;
+    font-weight: 700;
+}
+
+.masonry-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 12px 14px;
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.collection-title {
+    font-weight: 700;
+    color: #fff;
+}
+
+.collection-sub {
+    color: var(--muted);
+    font-size: .95rem;
+}
+
+/* collection index grid images */
+.grid-image {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+    border-radius: 8px;
+}
+
+/* about/contact/footer */
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+    align-items: center;
+}
+
+.about-img {
+    width: 100%;
+    max-height: 360px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+@media(min-width:900px) {
+    .about-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.site-footer {
+    color: #6b7280;
+    padding: 3rem 1rem;
+}
+
+/* lightbox */
+.lb-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 120;
+    background: rgba(3, 3, 3, 0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.lb-inner {
+    width: min(1200px, 96%);
+    max-height: 92vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 10px;
+}
+
+.lb-image {
+    width: 100%;
+    max-height: 76vh;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+}
+
+.lb-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.lb-btn {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--gold);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: .5rem .75rem;
+    border-radius: .45rem;
+}
+
+/* utilities */
+.muted {
+    color: var(--muted);
+}
+
+.py-14 {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+}
+
+/* responsive tweaks */
+@media(max-width:640px) {
+    .hero-title {
+        font-size: 1.8rem
+    }
+
+    .masonry-item img {
+        height: 200px
+    }
+}
