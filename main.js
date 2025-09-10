@@ -1,42 +1,82 @@
-/* main.js - vanilla JS for the portfolio site */
+/* main.js - vanilla JS for Freezemoment (complete)
+   - Fetches /galleries/galleries.json
+   - Renders collections and collection index
+   - Lightbox with share/copy
+   - Hero preload, intro overlay, throttled parallax
+   - Hot-air distortion on hero title (updates inline SVG feTurbulence + feDisplacementMap)
+*/
 
-/* ---------- helpers ---------- */
+/* ----------------- Helpers ----------------- */
+function el(q, root = document) { return root.querySelector(q); }
+function elAll(q, root = document) { return Array.from((root || document).querySelectorAll(q)); }
+function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+function escapeHtml(s = '') {
+    return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+}
 function imagesToSrcArray(images) {
     if (!images) return [];
-    return images.map(img => (typeof img === 'string' ? img : (img.src || img.large || img.path || img.file)));
+    return images.map(i => (typeof i === 'string' ? i : (i.src || i.large || i.path || i.file || '')));
 }
 function imagesToThumbArray(images) {
     if (!images) return [];
-    return images.map(img => (typeof img === 'string' ? img : (img.thumb || img.small || img.src)));
+    return images.map(i => (typeof i === 'string' ? i : (i.thumb || i.small || i.src || '')));
 }
-function el(q, root = document) { return root.querySelector(q); }
-function elAll(q, root = document) { return Array.from(root.querySelectorAll(q)); }
+async function copyToClipboard(text) {
+    if (navigator.clipboard) return navigator.clipboard.writeText(text);
+    return new Promise((resolve, reject) => {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); resolve(); } catch (e) { reject(e); } finally { ta.remove(); }
+    });
+}
 
-/* ---------- DOM refs ---------- */
-const collectionsGrid = document.getElementById('collections-grid');
-const collectionViewSection = document.getElementById('collection-view');
-const collectionContent = document.getElementById('collection-content');
-const portfolioSection = document.getElementById('portfolio');
-const heroBg = document.getElementById('hero-bg');
-const heroTitle = document.getElementById('hero-title');
-const ctaView = document.getElementById('cta-view');
-const scrollIndicator = document.getElementById('scroll-indicator');
-const yearEl = document.getElementById('year');
+/* ----------------- DOM refs ----------------- */
+const collectionsGrid = el('#collections-grid');
+const portfolioSection = el('#portfolio');
+const collectionViewSection = el('#collection-view');
+const collectionContent = el('#collection-content');
+const heroBg = el('#hero-bg');
+const heroTitle = el('#hero-title');
+const introOverlay = el('#intro-overlay');
+const scrollIndicator = el('#scroll-indicator');
+const headerPortfolioBtn = el('#header-portfolio-btn');
+const mobileNav = el('#mobile-nav');
+const yearEl = el('#year');
 
-/* lightbox refs */
-const lb = document.getElementById('lightbox');
-const lbImage = document.getElementById('lb-image');
-const lbCaption = document.getElementById('lb-caption');
-const lbPrev = document.getElementById('lb-prev');
-const lbNext = document.getElementById('lb-next');
-const lbShare = document.getElementById('lb-share');
-const lbClose = document.getElementById('lb-close');
+const lb = el('#lightbox');
+const lbImage = el('#lb-image');
+const lbCaption = el('#lb-caption');
+const lbPrev = el('#lb-prev');
+const lbNext = el('#lb-next');
+const lbShare = el('#lb-share');
+const lbClose = el('#lb-close');
 
-let collections = []; // loaded collections
+let collections = [];
 let activeCollection = null;
-let lightboxState = { open: false, images: [], idx: 0 };
+let lightboxState = { open: false, images: [], idx: 0, label: '' };
 
-/* ---------- fetch & render ---------- */
+/* ---------- full screen animation ---------- */
+document.addEventListener("DOMContentLoaded", () => {
+    const preloader = document.querySelector(".preloader");
+    const mainContent = document.querySelector(".main-content");
+
+    // Set a timeout for the animation duration
+    // This should match your CSS animation durations
+    setTimeout(() => {
+        // Add the class to fade out the preloader
+        preloader.classList.add("fade-out");
+
+        // Once the fade-out animation is complete, remove the preloader from the DOM
+        preloader.addEventListener("transitionend", () => {
+            preloader.style.display = "none";
+            mainContent.style.display = "block"; // Show the main content
+        }, { once: true });
+    }, 3000); // Wait for 3 seconds (adjust based on your total animation time)
+});
+
+/* ----------------- Fetch & render galleries ----------------- */
 async function fetchGalleries() {
     try {
         const res = await fetch('/galleries/galleries.json', { cache: 'no-store' });
@@ -44,14 +84,16 @@ async function fetchGalleries() {
         const data = await res.json();
         collections = Array.isArray(data) ? data : [];
         renderCollections();
-        console.info('[gallery] JSON loaded', collections.length, 'collections');
+        console.info('[gallery] loaded', collections.length, 'collections');
     } catch (err) {
-        console.error('Failed to load galleries.json', err);
+        console.error('[gallery] failed to load galleries.json', err);
+        // graceful fallback: empty grid
+        if (collectionsGrid) collectionsGrid.innerHTML = `<div class="muted">No collections available.</div>`;
     }
 }
 
-/* render collection tiles */
 function renderCollections() {
+    if (!collectionsGrid) return;
     collectionsGrid.innerHTML = '';
     if (!collections || collections.length === 0) {
         collectionsGrid.innerHTML = `<div class="muted">No collections found.</div>`;
@@ -59,14 +101,14 @@ function renderCollections() {
     }
 
     collections.forEach((c, i) => {
-        const cover = c.coverThumb || c.cover || (c.images ? imagesToThumbArray(c.images)[0] : '/assets/hero.jpg');
-        const count = (c.images && c.images.length) ? c.images.length : '—';
-        const node = document.createElement('article');
-        node.className = 'masonry-item reveal';
-        node.setAttribute('role', 'listitem');
-        node.innerHTML = `
+        const coverThumb = c.coverThumb || c.cover || (c.images ? imagesToThumbArray(c.images)[0] : '/assets/hero.jpg');
+        const count = (c.images?.length) ? c.images.length : '—';
+        const item = document.createElement('article');
+        item.className = 'masonry-item reveal';
+        item.setAttribute('role', 'listitem');
+        item.innerHTML = `
       <div class="ribbon">View</div>
-      <img src="${cover}" alt="${escapeHtml(c.label)}" loading="eager" decoding="async" fetchpriority="high" />
+      <img src="${escapeHtml(coverThumb)}" alt="${escapeHtml(c.label)}" loading="eager" decoding="async" fetchpriority="high" />
       <div class="masonry-meta">
         <div>
           <div class="collection-title">${escapeHtml(c.label)}</div>
@@ -75,16 +117,16 @@ function renderCollections() {
         <div style="color:var(--gold)">•</div>
       </div>
     `;
-        node.addEventListener('click', () => openCollection(c));
-        collectionsGrid.appendChild(node);
+        item.addEventListener('click', () => openCollection(c));
+        collectionsGrid.appendChild(item);
+        // small reveal delay
+        setTimeout(() => item.classList.add('is-visible'), 60 * i);
     });
-
-    // reveal animation: add is-visible slightly staggered
-    elAll('.masonry-item').forEach((n, idx) => setTimeout(() => n.classList.add('is-visible'), idx * 60));
 }
 
-/* open a collection (show index page) */
+/* ----------------- Collection view ----------------- */
 function openCollection(col) {
+    if (!collectionViewSection || !portfolioSection) return;
     activeCollection = col;
     portfolioSection.style.display = 'none';
     collectionViewSection.style.display = '';
@@ -93,40 +135,39 @@ function openCollection(col) {
 }
 
 function closeCollectionView() {
+    if (!collectionViewSection || !portfolioSection) return;
     activeCollection = null;
     collectionViewSection.style.display = 'none';
     portfolioSection.style.display = '';
-    window.scrollTo({ top: document.getElementById('portfolio').offsetTop - 60, behavior: 'smooth' });
+    window.scrollTo({ top: portfolioSection.offsetTop - 60, behavior: 'smooth' });
 }
 
-/* render collection index grid */
 function renderCollectionIndex(col) {
+    if (!collectionContent) return;
     collectionContent.innerHTML = '';
     const header = document.createElement('div');
-    header.innerHTML = `<div style="margin-bottom:18px;"><button class="nav-pill" id="back-to-collections">← Back to Collections</button></div>
-    <h3>${escapeHtml(col.label)}</h3>
-    <p class="muted">${col.metadata?.description || `${(col.images || []).length} photos`}</p>
-  `;
+    header.className = 'collection-header';
     collectionContent.appendChild(header);
-    el('#back-to-collections', header).addEventListener('click', closeCollectionView);
+    el('#back-to-collections', header)?.addEventListener('click', closeCollectionView);
 
     const grid = document.createElement('div');
-    grid.className = 'grid-collection';
+    grid.className = 'collection-grid';
+    // responsive columns will be handled by CSS; keep simple structure
     grid.style.display = 'grid';
-    grid.style.gridTemplateColumns = 'repeat(2,1fr)';
     grid.style.gap = '12px';
-    if (window.innerWidth > 1100) grid.style.gridTemplateColumns = 'repeat(3,1fr)';
+    grid.style.gridTemplateColumns = 'repeat(2, 1fr)';
+    if (window.innerWidth > 1100) grid.style.gridTemplateColumns = 'repeat(3, 1fr)';
 
     (col.images || []).forEach((imgEntry, idx) => {
-        const src = (typeof imgEntry === 'string') ? imgEntry : (imgEntry.src || imgEntry.large || imgEntry.path);
-        const thumb = (typeof imgEntry === 'string') ? imgEntry : (imgEntry.thumb || imgEntry.small || imgEntry.src);
+        const src = (typeof imgEntry === 'string') ? imgEntry : (imgEntry.src || imgEntry.large || imgEntry.path || '');
+        const thumb = (typeof imgEntry === 'string') ? imgEntry : (imgEntry.thumb || imgEntry.small || imgEntry.src || src);
         const name = (typeof imgEntry === 'string') ? imgEntry.split('/').pop() : (imgEntry.name || (imgEntry.src && imgEntry.src.split('/').pop()));
         const caption = (col.metadata?.captions?.[name]) || imgEntry.caption || '';
         const card = document.createElement('div');
-        card.style.cursor = 'pointer';
+        card.className = 'collection-card';
         card.innerHTML = `
-      <img class="grid-image" src="${thumb || src}" alt="${escapeHtml(caption || name)}" loading="lazy" />
-      <div style="padding:10px; display:flex; justify-content:space-between; align-items:center;">
+      <img class="grid-image" src="${escapeHtml(thumb || src)}" alt="${escapeHtml(caption || name)}" loading="lazy" />
+      <div class="collection-card-meta" style="padding:10px; display:flex; justify-content:space-between; align-items:center;">
         <div style="color:#fff">${escapeHtml(caption || name)}</div>
         <div style="display:flex; gap:8px">
           <button class="lb-btn share-btn">Share</button>
@@ -134,28 +175,31 @@ function renderCollectionIndex(col) {
         </div>
       </div>
     `;
-        // click to open lightbox
-        card.querySelector('img').addEventListener('click', () => openLightbox(col.images, idx, col.label));
-        // share / link
-        card.querySelector('.share-btn').addEventListener('click', (e) => { e.stopPropagation(); shareImage(src); });
-        card.querySelector('.link-btn').addEventListener('click', (e) => { e.stopPropagation(); copyToClipboard(window.location.origin + src); alert('Link copied'); });
+        const imgEl = card.querySelector('img');
+        imgEl?.addEventListener('click', () => openLightbox(col.images, idx, col.label));
+        card.querySelector('.share-btn')?.addEventListener('click', (e) => { e.stopPropagation(); shareImage(src); });
+        card.querySelector('.link-btn')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            copyToClipboard(window.location.origin + src).then(() => alert('Link copied'));
+        });
         grid.appendChild(card);
     });
 
     collectionContent.appendChild(grid);
 }
 
-/* ---------- lightbox ---------- */
+/* ----------------- Lightbox ----------------- */
 function openLightbox(images, idx = 0, label = '') {
     const srcs = imagesToSrcArray(images);
-    if (!srcs.length) return;
-    lightboxState = { open: true, images: srcs, idx: Math.max(0, Math.min(idx, srcs.length - 1)), label };
+    if (!srcs.length || !lb) return;
+    lightboxState = { open: true, images: srcs, idx: clamp(idx, 0, srcs.length - 1), label };
     lbImage.src = lightboxState.images[lightboxState.idx];
     lbCaption.textContent = `${label} — ${lightboxState.idx + 1} / ${lightboxState.images.length}`;
     lb.style.display = 'flex';
 }
 function closeLightbox() {
-    lightboxState = { open: false, images: [], idx: 0 };
+    lightboxState = { open: false, images: [], idx: 0, label: '' };
+    if (!lb) return;
     lb.style.display = 'none';
     lbImage.src = '';
 }
@@ -171,83 +215,222 @@ function prevLightbox() {
     lbImage.src = lightboxState.images[lightboxState.idx];
     lbCaption.textContent = `${lightboxState.label} — ${lightboxState.idx + 1} / ${lightboxState.images.length}`;
 }
-
-/* share helper */
-async function shareImage(path) {
+function shareImage(path) {
     const url = window.location.origin + path;
     if (navigator.share) {
-        try { await navigator.share({ title: 'Photo — Freezemoment', url }); return; } catch (e) { /* fallthrough */ }
+        navigator.share({ title: 'Photo — Freezemoment', url }).catch(() => copyToClipboard(url).then(() => alert('Link copied')));
+    } else {
+        copyToClipboard(url).then(() => alert('Link copied')).catch(() => prompt('Copy link', url));
     }
-    try { await copyToClipboard(url); alert('Link copied'); } catch (e) { prompt('Copy link', url); }
 }
 
-/* copy helper */
-async function copyToClipboard(text) {
-    if (navigator.clipboard) return navigator.clipboard.writeText(text);
-    return new Promise((res, rej) => {
-        const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta);
-        ta.select(); try { document.execCommand('copy'); res(); } catch (e) { rej(e); } finally { ta.remove(); }
-    });
+/* lightbox wiring */
+if (lbClose) lbClose.addEventListener('click', closeLightbox);
+if (lbPrev) lbPrev.addEventListener('click', prevLightbox);
+if (lbNext) lbNext.addEventListener('click', nextLightbox);
+if (lbShare) lbShare.addEventListener('click', () => shareImage(lightboxState.images[lightboxState.idx] || ''));
+
+// click backdrop to close
+if (lb) lb.addEventListener('click', (e) => { if (e.target === lb) closeLightbox(); });
+
+/* ----------------- Hero: preload, intro & perf ----------------- */
+(function preloadHero() {
+    try {
+        const img = new Image();
+        img.src = '/assets/hero.jpg';
+        img.decoding = 'async';
+        img.loading = 'eager';
+    } catch (e) { /* ignore */ }
+})();
+
+function playIntroThenReveal() {
+    if (!introOverlay) return;
+    // show overlay for a short moment then hide and reveal hero text
+    setTimeout(() => {
+        introOverlay.classList.add('hidden');
+        heroTitle?.classList.add('is-visible');
+        elAll('.hero-sub, .cta-wrap').forEach(n => n.classList.add('is-visible'));
+    }, 850);
 }
+playIntroThenReveal();
 
-/* lightbox controls */
-lbClose.addEventListener('click', closeLightbox);
-lbPrev.addEventListener('click', prevLightbox);
-lbNext.addEventListener('click', nextLightbox);
-lbShare.addEventListener('click', () => shareImage(lightboxState.images[lightboxState.idx]));
-lb.addEventListener('click', (e) => { if (e.target === lb) closeLightbox(); });
-
-/* header nav */
-elAll('.nav-pill').forEach(btn => btn.addEventListener('click', e => {
-    const target = btn.dataset?.target || btn.textContent.toLowerCase();
-    const el = document.getElementById(target);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}));
-
-document.getElementById('mobile-nav').addEventListener('change', (e) => {
-    const id = e.target.value;
-    const node = document.getElementById(id);
-    if (node) node.scrollIntoView({ behavior: 'smooth', block: 'start' });
-});
-
-/* CTA / scroll indicator */
-ctaView.addEventListener('click', () => portfolioSection.scrollIntoView({ behavior: 'smooth', block: 'start' }));
-scrollIndicator.addEventListener('click', () => portfolioSection.scrollIntoView({ behavior: 'smooth', block: 'start' }));
-
-/* parallax & mouse micro interaction */
+/* throttled parallax using rAF */
+let latestScrollY = 0;
+let ticking = false;
 window.addEventListener('scroll', () => {
-    const y = window.scrollY || 0;
-    if (heroBg) heroBg.style.transform = `translateY(${y * 0.14}px)`;
-    const header = document.getElementById('site-header');
-    if (header) { if (y > 28) header.classList.add('solid'); else header.classList.remove('solid'); }
+    latestScrollY = window.scrollY || 0;
+    if (!ticking) {
+        window.requestAnimationFrame(() => {
+            if (heroBg) heroBg.style.transform = `translateY(${latestScrollY * 0.12}px)`;
+            const header = el('#site-header');
+            if (header) (latestScrollY > 28) ? header.classList.add('solid') : header.classList.remove('solid');
+            ticking = false;
+        });
+        ticking = true;
+    }
 }, { passive: true });
 
-window.addEventListener('mousemove', (ev) => {
-    const w = window.innerWidth, h = window.innerHeight;
-    const mx = (ev.clientX - w / 2) / (w / 2);
-    const my = (ev.clientY - h / 2) / (h / 2);
-    const ty = Math.max(Math.min(-my * 8, 12), -12);
-    const rx = Math.max(Math.min(mx * 6, 10), -10);
-    const ls = `${0.01 + Math.abs(mx) * 0.02}em`;
-    document.documentElement.style.setProperty('--ty', `${ty}px`);
-    document.documentElement.style.setProperty('--rx', `${rx}deg`);
-    document.documentElement.style.setProperty('--ls', ls);
-});
+/* header portfolio button */
+if (headerPortfolioBtn) headerPortfolioBtn.addEventListener('click', (e) => { e.preventDefault(); portfolioSection?.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+if (scrollIndicator) scrollIndicator.addEventListener('click', () => { portfolioSection?.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+if (mobileNav) mobileNav.addEventListener('change', (e) => { const id = e.target.value; const node = el(`#${id}`); if (node) node.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
 
-/* staged reveal for hero */
-setTimeout(() => heroTitle.classList.add('is-visible'), 120);
-setTimeout(() => elAll('.hero-sub, .cta-wrap').forEach(n => n.classList.add('is-visible')), 360);
+/* ----------------- Hot-air distortion (hero title) ----------------- */
+/* Finds the first feTurbulence and feDisplacementMap in the DOM (inline SVG expected near top of page) */
+const feTurb = document.querySelector('feTurbulence');
+const feDisp = document.querySelector('feDisplacementMap');
+const BASE_FREQ = 0.9;
+const BASE_SCALE = 12;
 
-/* show current year */
-yearEl.textContent = new Date().getFullYear();
+if (feTurb) feTurb.setAttribute('baseFrequency', String(BASE_FREQ));
+if (feDisp) feDisp.setAttribute('scale', String(BASE_SCALE));
 
-/* small safe HTML escape */
-function escapeHtml(s = '') {
-    return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+let distortionRaf = 0;
+function setDistortionFromMouse(mx, my) {
+    const freq = BASE_FREQ + Math.abs(mx) * 0.25; // tweakable
+    const scale = BASE_SCALE + Math.abs(my) * 18;
+    if (feTurb) feTurb.setAttribute('baseFrequency', freq.toFixed(3));
+    if (feDisp) feDisp.setAttribute('scale', Math.round(scale));
+}
+function resetDistortion() {
+    if (feTurb) feTurb.setAttribute('baseFrequency', String(BASE_FREQ));
+    if (feDisp) feDisp.setAttribute('scale', String(BASE_SCALE));
 }
 
-/* initial fetch */
-fetchGalleries();
+function onHeroMouseMove(e) {
+    if (!heroTitle) return;
+    const rect = heroTitle.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const mx = (e.clientX - cx) / (rect.width / 2);
+    const my = (e.clientY - cy) / (rect.height / 2);
+    const cmx = clamp(mx, -1, 1);
+    const cmy = clamp(my, -1, 1);
+    if (distortionRaf) cancelAnimationFrame(distortionRaf);
+    distortionRaf = requestAnimationFrame(() => setDistortionFromMouse(cmx, cmy));
+}
+if (heroTitle) {
+    heroTitle.addEventListener('mousemove', onHeroMouseMove);
+    heroTitle.addEventListener('mouseenter', () => setDistortionFromMouse(0.2, 0.2));
+    heroTitle.addEventListener('mouseleave', resetDistortion);
+}
 
-/* Expose a global handy debug function (optional) */
-window._fm = { fetchGalleries, openCollection, closeCollectionView };
+/* ----------------- Misc UI wiring ----------------- */
+// back-to-collections is created dynamically in collection view; event bound when element exists
+document.addEventListener('click', (e) => {
+    const elt = e.target;
+    if (elt && elt.matches && elt.matches('.back-btn-js')) {
+        closeCollectionView();
+    }
+});
+
+// set year (if element present)
+if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+/* ----------------- Init ----------------- */
+fetchGalleries();
+// show chevron only when hero is mostly visible
+(function toggleChevronOnScroll() {
+    const chevron = document.querySelector('.scroll-indicator');
+    if (!chevron) return;
+    const threshold = (window.innerHeight || 800) * 0.6; // show while within top 60% of viewport
+    function update() {
+        const y = window.scrollY || 0;
+        chevron.style.opacity = (y < threshold) ? '1' : '0';
+        chevron.style.pointerEvents = (y < threshold) ? 'auto' : 'none';
+    }
+    update();
+    window.addEventListener('scroll', () => {
+        // throttle with rAF style
+        if (window._chevRaf) cancelAnimationFrame(window._chevRaf);
+        window._chevRaf = requestAnimationFrame(update);
+    }, { passive: true });
+})();
+
+/* ===== Site menu toggle + accessible focus-trap ===== */
+(function siteMenuInit() {
+    const toggle = document.getElementById('menu-toggle');
+    const menu = document.getElementById('site-menu');
+    const closeBtn = document.getElementById('menu-close');
+    if (!toggle || !menu) return;
+
+    const firstFocusableSelector = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+    let lastFocusedBeforeOpen = null;
+
+    function openMenu() {
+        lastFocusedBeforeOpen = document.activeElement;
+        toggle.setAttribute('aria-expanded', 'true');
+        menu.classList.add('open');
+        menu.setAttribute('aria-hidden', 'false');
+        menu.style.display = 'flex';
+        // focus first focusable item inside menu
+        const first = menu.querySelector(firstFocusableSelector);
+        if (first) first.focus();
+        // prevent body scroll
+        document.body.style.overflow = 'hidden';
+        document.addEventListener('keydown', onKeyDown);
+    }
+
+    function closeMenu() {
+        toggle.setAttribute('aria-expanded', 'false');
+        menu.classList.remove('open');
+        menu.setAttribute('aria-hidden', 'true');
+        menu.style.display = 'none';
+        document.body.style.overflow = '';
+        document.removeEventListener('keydown', onKeyDown);
+        // restore focus
+        try { if (lastFocusedBeforeOpen) lastFocusedBeforeOpen.focus(); } catch (e) { }
+    }
+
+    function onKeyDown(e) {
+        if (e.key === 'Escape') { closeMenu(); return; }
+        if (e.key === 'Tab') {
+            // simple focus trap: keep focus inside menu
+            const focusables = Array.from(menu.querySelectorAll(firstFocusableSelector)).filter(n => n.offsetParent !== null);
+            if (focusables.length === 0) return;
+            const idx = focusables.indexOf(document.activeElement);
+            if (e.shiftKey && idx === 0) {
+                e.preventDefault();
+                focusables[focusables.length - 1].focus();
+            } else if (!e.shiftKey && idx === focusables.length - 1) {
+                e.preventDefault();
+                focusables[0].focus();
+            }
+        }
+    }
+
+    // click outside to close (menu inner panel will stop propagation)
+    menu.addEventListener('click', function (e) {
+        if (e.target === menu) closeMenu();
+    });
+
+    toggle.addEventListener('click', function (e) {
+        const open = toggle.getAttribute('aria-expanded') === 'true';
+        if (open) closeMenu(); else openMenu();
+    });
+
+    closeBtn?.addEventListener('click', closeMenu);
+
+    // close on internal link click and smooth-scroll to section
+    menu.querySelectorAll('.menu-link').forEach(a => {
+        a.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            const href = a.getAttribute('href');
+            if (href && href.startsWith('#')) {
+                const target = document.querySelector(href);
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            closeMenu();
+        });
+    });
+})();
+
+/* Expose minimal API for dev debugging (optional) */
+window._fm = {
+    fetchGalleries,
+    openCollection,
+    closeCollectionView,
+    openLightbox,
+    closeLightbox
+};
