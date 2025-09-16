@@ -5,223 +5,202 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Freezemoment — Photography</title>
-
-    <!-- theme color for mobile -->
     <meta name="theme-color" content="#0b0b0b" />
 
-    <!-- CSS -->
+    <!-- main stylesheet -->
     <link rel="stylesheet" href="/styles.css" />
 
-    <!-- Inline SVG filter to be available for CSS filter: url(#distort) -->
+    <!-- Inline SVG filter for hero distortion (must be in DOM so CSS/JS can reference it) -->
     <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-        <filter id="distort">
-            <feTurbulence baseFrequency="0.9" numOctaves="1" result="turb" seed="2" />
-            <feDisplacementMap in="SourceGraphic" in2="turb" scale="12" xChannelSelector="R" yChannelSelector="G" />
-            <animate xlink:href="#distort feTurbulence" attributeName="baseFrequency" values="0.9;1.05;0.9" dur="6s"
-                repeatCount="indefinite" />
+        <filter id="hotair-distort" x="-20%" y="-20%" width="140%" height="140%">
+            <feTurbulence id="fm-feTurb" baseFrequency="0.9" numOctaves="1" seed="2" result="turb" />
+            <feDisplacementMap id="fm-feDisp" in="SourceGraphic" in2="turb" scale="12" xChannelSelector="R"
+                yChannelSelector="G" />
         </filter>
     </svg>
-
 </head>
 
 <body>
     <header class="app-header" id="site-header">
-        <div class="app-header container-max">
-            <a class="logo" href="/" id="logo">
+        <div class="container-max header-inner">
+            <a class="logo" href="/" id="logo" aria-label="Go to home">
                 <img src="assets/FM_logo.svg" alt="Freezemoment Logo" class="logo-img" />
             </a>
-            <!-- Menu toggle (styled hamburger) -->
-            <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="site-menu"
+
+            <button id="menu-toggle" class="menu-toggle" aria-expanded="false" aria-controls="site-menu"
                 aria-label="Open menu">
-                <span class="hamburger">
-                    <span></span><span></span><span></span>
-                </span>
+                <span class="hamburger"><span></span><span></span><span></span></span>
             </button>
         </div>
     </header>
 
-    <!-- Full screen animation -->
-    <!-- <div class="preloader">
-        <div class="animation-container">
-            <div class="logo">
-                <img src="assets/FM_logo.svg" alt="Logo" />
-            </div>
-            <div class="text-animation">
-                <p class="word">FREEZE</p>
-                <p class="word">MOMENT</p>
-                <p class="word">PRESENT</p>
-            </div>
-        </div>
-    </div> -->
+    <!-- PRELOADER: SVG tracing + tagline -->
+    <div class="preloader" id="preloader" role="status" aria-live="polite">
+        <div class="preloader-inner">
+            <!-- Inline lightweight SVG for tracing animation (keeps animation reliable) -->
+            <svg id="preloader-svg" viewBox="0 0 800 180" width="60%" height="auto" aria-hidden="true"
+                focusable="false">
+                <!-- Simple text path tracing: we use a serif-ish style to look elegant -->
+                <defs>
+                    <style>
+                        .pl-stroke {
+                            fill: none;
+                            stroke: #d4a95a;
+                            stroke-width: 2.8;
+                            stroke-linecap: round;
+                            stroke-linejoin: round;
+                        }
 
-    <!-- Full screen menu (inserted near top of body) -->
-    <nav id="site-menu" class="site-menu" role="dialog" aria-modal="true" aria-hidden="true">
-        <div class="site-menu-inner">
-            <button class="menu-close" id="menu-close" aria-label="Close menu">&times;</button>
+                        .pl-fill {
+                            fill: #d4a95a;
+                            opacity: 0;
+                        }
+                    </style>
+                </defs>
 
-            <div class="menu-brand">
-                <div class="menu-logo">Freezemoment</div>
-                <div class="menu-sub">Photography · Portraits · Travel</div>
-            </div>
+                <!-- Wordmark - we use paths made from SVG text converted to paths (simple fallback if not exact logo) -->
+                <g id="logo-trace" transform="translate(10,110)">
+                    <!-- For robustness we render text as paths-like strokes (SVG text + stroke) -->
+                    <text x="0" y="0" font-family="Playfair Display, serif" font-size="60" font-weight="700"
+                        class="pl-stroke">FREEZEMOMENT</text>
+                </g>
+            </svg>
 
-            <ul class="menu-list" role="menu">
-                <li role="none"><a role="menuitem" href="#home" class="menu-link">Home</a></li>
-                <li role="none"><a role="menuitem" href="#portfolio" class="menu-link">Portfolio</a></li>
-                <li role="none"><a role="menuitem" href="#about" class="menu-link">About</a></li>
-                <li role="none"><a role="menuitem" href="#contact" class="menu-link">Contact</a></li>
-            </ul>
-
-            <div class="menu-socials">
-                <a class="menu-social" id="menu-instagram" href="https://instagram.com/yourhandle" target="_blank"
-                    rel="noreferrer">Instagram</a>
-                <a class="menu-social" id="menu-phone" href="tel:+447887335510">+44 7887 335510</a>
-                <a class="menu-social" id="menu-email" href="mailto:hello@freeze-moment.com">hello@freeze-moment.com</a>
-            </div>
-        </div>
-    </nav>
-
-    <main id="main">
-        <!-- HERO -->
-        <!-- preload hero image for faster paint -->
-        <link rel="preload" as="image" href="/assets/hero.jpg">
-
-        <section id="home" class="hero" aria-label="Hero">
-            <!-- hero background -->
-            <div class="hero-bg" id="hero-bg" style="background-image:url('/assets/hero.jpg')"></div>
-            <div class="hero-overlay"></div>
-
-            <div class="hero-inner container-max">
-                <!-- title uses the SVG filter 'distort' already present in the document -->
-                <h1 id="hero-title" class="hero-title">Photography that stays with you
-                </h1>
-                <p class="hero-sub">Portraits · Travel · Editorial</p>
-
-                <!-- bottom chevron (kept) -->
-                <div class="scroll-indicator" id="scroll-indicator" title="Scroll to collections" role="button"
-                    aria-label="Scroll to collections">
-                    <svg viewBox="0 0 24 24" aria-hidden="false" focusable="false">
-                        <path d="M12 16.5l-6-6 1.4-1.4L12 13.7l4.6-4.6L18 10.5z"></path>
-                    </svg>
-                </div>
-            </div>
-
-            <div class="noise-overlay" aria-hidden="true"></div>
-
-            <!-- intro overlay that plays before showing main hero (hidden after play) -->
-            <div id="intro-overlay" class="intro-overlay" aria-hidden="true">
-                <div class="intro-logo">
-                    <!-- simple logo text animation — you can replace with an SVG logo file if you prefer -->
-                    <span class="intro-logo-text">Freezemoment</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- PORTFOLIO -->
-        <section id="portfolio" class="gallery-section">
-            <div class="container-max">
-                <div class="collections-header"
-                    style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px;">
-                    <div>
-                        <h2>Collections</h2>
-                        <p class="muted">Click a collection to open the full gallery.</p>
-                    </div>
-                </div>
-
-                <!-- grid where collection tiles will be injected -->
-                <div id="collections-grid" class="masonry" role="list" aria-live="polite"></div>
-            </div>
-        </section>
-
-        <!-- collection page (replaced by JS when user opens a collection) -->
-        <section id="collection-view" class="gallery-section" style="display:none;">
-            <div class="container-max" id="collection-content"></div>
-        </section>
-
-        <!-- ABOUT -->
-        <section id="about" class="py-14 container-max about-section">
-            <div class="about-grid">
-                <figure class="about-media">
-                    <img src="/assets/about.jpg" alt="About the photographer" class="about-img" />
-                    <figcaption class="about-card">
-                        <h3 class="about-name">Freezemoment</h3>
-                        <p class="about-role">Fine art & editorial photographer</p>
-                        <p class="about-desc">
-                            I work with natural light and audio cues to tell honest visual stories —
-                            editorial, weddings, portraiture and travel. Available for commissions worldwide.
-                        </p>
-                        <div class="about-stats">
-                            <div><strong>10+</strong><span>Years</span></div>
-                            <div><strong>300+</strong><span>Projects</span></div>
-                        </div>
-                    </figcaption>
-                </figure>
-            </div>
-        </section>
-
-        <!-- CONTACT -->
-        <section id="contact" class="py-12 container-max contact-section">
-            <div class="contact-card">
-                <div class="contact-left">
-                    <div class="contact-logo">
-                        <!-- simple badge-like logo using gold circle + initial -->
-                        <svg width="56" height="56" viewBox="0 0 56 56" aria-hidden="false" focusable="false">
-                            <defs />
-                            <circle cx="28" cy="28" r="28" fill="#D4A95A"></circle>
-                            <text x="50%" y="55%" alignment-baseline="middle" text-anchor="middle"
-                                font-family="Playfair Display, serif" font-size="20" fill="#071018">F</text>
-                        </svg>
-                    </div>
-                    <div class="contact-links">
-                        <a class="contact-link" id="contact-instagram" href="https://instagram.com/yourhandle"
-                            target="_blank" rel="noreferrer">
-                            <!-- instagram icon -->
-                            <svg>
-                                <path fill="currentColor"
-                                    d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334" />
-                            </svg>
-                            <span>@yourhandle</span>
-                        </a>
-
-                        <a class="contact-link" id="contact-phone" href="tel:+447887335510">
-                            <svg>
-                                <path fill="currentColor"
-                                    d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.6 17.6 0 0 0 4.168 6.608 17.6 17.6 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.68.68 0 0 0-.58-.122l-2.19.547a1.75 1.75 0 0 1-1.657-.459L5.482 8.062a1.75 1.75 0 0 1-.46-1.657l.548-2.19a.68.68 0 0 0-.122-.58zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z" />
-                            </svg>
-                            <span>+44 7887 335510</span>
-                        </a>
-
-                        <a class="contact-link" href="mailto:hello@freeze-moment.com">
-                            <svg>
-                                <path fill="currentColor"
-                                    d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z" />
-                            </svg>
-                            <span>hello@freeze-moment.com</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <footer class="site-footer container-max">
-        </footer>
-
-    </main>
-
-    <!-- LIGHTBOX (in DOM, shown/hide by JS) -->
-    <div id="lightbox" class="lb-overlay" style="display:none;" role="dialog" aria-modal="true">
-        <div class="lb-inner" id="lb-inner">
-            <img id="lb-image" class="lb-image" src="" alt="" />
-            <div id="lb-caption" style="color:#fff; text-align:center; margin-top:8px;"></div>
-            <div class="lb-controls">
-                <button class="lb-btn" id="lb-prev">Prev</button>
-                <button class="lb-btn" id="lb-next">Next</button>
-                <button class="lb-btn" id="lb-share">Share</button>
-                <button class="lb-btn" id="lb-close">Close</button>
+            <div class="preloader-lines">
+                <div class="tagline-line" data-delay="1200">Fine art · Portraits · Travel</div>
+                <div class="tagline-line" data-delay="1600">Be bold. Be Freezemoment.</div>
             </div>
         </div>
     </div>
 
-    <!-- Main JS -->
+    <!-- MAIN (hidden until preloader finishes) -->
+    <div class="main-content" id="main-content">
+        <!-- Full-screen menu -->
+        <nav id="site-menu" class="site-menu" role="dialog" aria-modal="true" aria-hidden="true">
+            <div class="site-menu-inner">
+                <button class="menu-close" id="menu-close" aria-label="Close menu">&times;</button>
+
+                <div class="menu-brand">
+                    <div class="menu-logo">Freezemoment</div>
+                    <div class="menu-sub">Photography · Portraits · Travel</div>
+                </div>
+
+                <ul class="menu-list" role="menu">
+                    <li role="none"><a role="menuitem" href="#home" class="menu-link">Home</a></li>
+                    <li role="none"><a role="menuitem" href="#portfolio" class="menu-link">Portfolio</a></li>
+                    <li role="none"><a role="menuitem" href="#about" class="menu-link">About</a></li>
+                    <li role="none"><a role="menuitem" href="#contact" class="menu-link">Contact</a></li>
+                </ul>
+
+                <div class="menu-socials">
+                    <a class="menu-social" href="https://instagram.com/yourhandle" target="_blank"
+                        rel="noreferrer">Instagram</a>
+                    <a class="menu-social" href="tel:+447887335510">+44 7887 335510</a>
+                    <a class="menu-social" href="mailto:hello@freeze-moment.com">hello@freeze-moment.com</a>
+                </div>
+            </div>
+        </nav>
+
+        <main id="main" aria-live="polite">
+            <!-- HERO -->
+            <section id="home" class="hero" aria-label="Hero">
+                <div id="hero-bg" class="hero-bg" style="background-image:url('/assets/hero.jpg')"></div>
+                <div class="hero-overlay"></div>
+
+                <div class="hero-inner container-max">
+                    <h1 id="hero-title" class="hero-title" tabindex="0">Photography that stays with you</h1>
+                    <p class="hero-sub">Portraits · Travel · Editorial</p>
+
+                    <div class="scroll-indicator" id="scroll-indicator" title="Scroll to collections" role="button"
+                        aria-label="Scroll to collections">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M12 16.5l-6-6 1.4-1.4L12 13.7l4.6-4.6L18 10.5z"></path>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="noise-overlay" aria-hidden="true"></div>
+            </section>
+
+            <!-- PORTFOLIO -->
+            <section id="portfolio" class="gallery-section">
+                <div class="container-max">
+                    <div class="collections-header">
+                        <div>
+                            <h2>Collections</h2>
+                            <p class="muted">Click a collection to open the full gallery.</p>
+                        </div>
+                    </div>
+
+                    <div id="collections-grid" class="masonry" role="list" aria-live="polite"></div>
+                </div>
+            </section>
+
+            <!-- collection view (hidden, populated by JS) -->
+            <section id="collection-view" class="gallery-section" style="display:none;">
+                <div class="container-max" id="collection-content" aria-live="polite"></div>
+            </section>
+
+            <!-- ABOUT -->
+            <section id="about" class="py-14 container-max about-section">
+                <div class="about-grid">
+                    <figure class="about-media">
+                        <img src="/assets/about.jpg" alt="About the photographer" class="about-img" />
+                        <figcaption class="about-card">
+                            <h3 class="about-name">Freezemoment</h3>
+                            <p class="about-role">Fine art & editorial photographer</p>
+                            <p class="about-desc">I work with natural light and audio cues to tell honest visual stories
+                                — editorial, weddings, portraiture and travel. Available for commissions worldwide.</p>
+                            <div class="about-stats">
+                                <div><strong>10+</strong><span>Years</span></div>
+                                <div><strong>300+</strong><span>Projects</span></div>
+                            </div>
+                        </figcaption>
+                    </figure>
+                </div>
+            </section>
+
+            <!-- CONTACT -->
+            <section id="contact" class="py-12 container-max contact-section">
+                <div class="contact-card">
+                    <div class="contact-left">
+                        <div class="contact-logo">
+                            <svg width="56" height="56" viewBox="0 0 56 56" aria-hidden="true" focusable="false">
+                                <circle cx="28" cy="28" r="28" fill="#D4A95A"></circle>
+                                <text x="50%" y="55%" alignment-baseline="middle" text-anchor="middle"
+                                    font-family="Playfair Display, serif" font-size="20" fill="#071018">F</text>
+                            </svg>
+                        </div>
+                        <div class="contact-links">
+                            <a class="contact-link" href="https://instagram.com/yourhandle" target="_blank"
+                                rel="noreferrer"><span>@yourhandle</span></a>
+                            <a class="contact-link" href="tel:+447887335510"><span>+44 7887 335510</span></a>
+                            <a class="contact-link"
+                                href="mailto:hello@freeze-moment.com"><span>hello@freeze-moment.com</span></a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <footer class="site-footer container-max"></footer>
+        </main>
+
+        <!-- LIGHTBOX -->
+        <div id="lightbox" class="lb-overlay" style="display:none;" role="dialog" aria-modal="true">
+            <div class="lb-inner" id="lb-inner">
+                <img id="lb-image" class="lb-image" src="" alt="" />
+                <div id="lb-caption" class="lb-caption"></div>
+                <div class="lb-controls">
+                    <button class="lb-btn" id="lb-prev">Prev</button>
+                    <button class="lb-btn" id="lb-next">Next</button>
+                    <button class="lb-btn" id="lb-share">Share</button>
+                    <button class="lb-btn" id="lb-close">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- main script -->
     <script src="/main.js" defer></script>
 </body>
 
