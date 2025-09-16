@@ -6,25 +6,22 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Freezemoment — Photography</title>
     <meta name="theme-color" content="#0b0b0b" />
-
-    <!-- main stylesheet -->
     <link rel="stylesheet" href="/styles.css" />
-
-    <!-- Inline SVG filter for hero distortion (must be in DOM so CSS/JS can reference it) -->
-    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-        <filter id="hotair-distort" x="-20%" y="-20%" width="140%" height="140%">
-            <feTurbulence id="fm-feTurb" baseFrequency="0.9" numOctaves="1" seed="2" result="turb" />
-            <feDisplacementMap id="fm-feDisp" in="SourceGraphic" in2="turb" scale="12" xChannelSelector="R"
+    <!-- Inline SVG filter for distortion (available to CSS via url(#hotair)) -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+        <filter id="hotair" x="-25%" y="-25%" width="150%" height="150%">
+            <feTurbulence id="fmTurb" baseFrequency="0.85" numOctaves="2" seed="3" result="t" />
+            <feDisplacementMap id="fmDisp" in="SourceGraphic" in2="t" scale="10" xChannelSelector="R"
                 yChannelSelector="G" />
         </filter>
     </svg>
 </head>
 
 <body>
-    <header class="app-header" id="site-header">
+    <header class="app-header" id="site-header" role="banner">
         <div class="container-max header-inner">
-            <a class="logo" href="/" id="logo" aria-label="Go to home">
-                <img src="assets/FM_logo.svg" alt="Freezemoment Logo" class="logo-img" />
+            <a class="logo" href="/" id="logo" aria-label="Freezemoment home">
+                <img src="/assets/FM_logo.svg" alt="Freezemoment Logo" class="logo-img" />
             </a>
 
             <button id="menu-toggle" class="menu-toggle" aria-expanded="false" aria-controls="site-menu"
@@ -34,51 +31,38 @@
         </div>
     </header>
 
-    <!-- PRELOADER: SVG tracing + tagline -->
-    <div class="preloader" id="preloader" role="status" aria-live="polite">
-        <div class="preloader-inner">
-            <!-- Inline lightweight SVG for tracing animation (keeps animation reliable) -->
-            <svg id="preloader-svg" viewBox="0 0 800 180" width="60%" height="auto" aria-hidden="true"
-                focusable="false">
-                <!-- Simple text path tracing: we use a serif-ish style to look elegant -->
-                <defs>
-                    <style>
-                        .pl-stroke {
-                            fill: none;
-                            stroke: #d4a95a;
-                            stroke-width: 2.8;
-                            stroke-linecap: round;
-                            stroke-linejoin: round;
-                        }
-
-                        .pl-fill {
-                            fill: #d4a95a;
-                            opacity: 0;
-                        }
-                    </style>
-                </defs>
-
-                <!-- Wordmark - we use paths made from SVG text converted to paths (simple fallback if not exact logo) -->
-                <g id="logo-trace" transform="translate(10,110)">
-                    <!-- For robustness we render text as paths-like strokes (SVG text + stroke) -->
-                    <text x="0" y="0" font-family="Playfair Display, serif" font-size="60" font-weight="700"
-                        class="pl-stroke">FREEZEMOMENT</text>
+    <!-- PRELOADER: uses your exact logo traced, then reveals filled logo + taglines -->
+    <div id="preloader" class="preloader" role="status" aria-live="polite">
+        <div class="pre-inner">
+            <!-- inline copy of your FM_logo.svg (trimmed/transformed for preloader) -->
+            <!-- IMPORTANT: this is your uploaded file inlined so the trace matches exactly -->
+            <?xml version="1.0" encoding="UTF-8"?>
+            <svg id="fm-logo-inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1299.4451 2351.5467" width="520"
+                height="220" aria-hidden="true" focusable="false">
+                <g transform="translate(-750.35465,-226.16009)">
+                    <!-- filled logo (hidden initially; revealed after stroke animation) -->
+                    <path id="fm-filled"
+                        d="m 2005.2133,1924.2667 -16.9867,-23.6266 c -23.0933,-32... 11.1467,63.96 30.52,90.4933 l 33.7066,47.2533 -649.7199,649.72"
+                        style="fill:#d4a95a;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.133333;opacity:0" />
+                    <!-- stroked path copy for tracing -->
+                    <path id="fm-stroke"
+                        d="m 2005.2133,1924.2667 -16.9867,-23.6266 c -23.0933,-32... 11.1467,63.96 30.52,90.4933 l 33.7066,47.2533 -649.7199,649.72"
+                        style="fill:none;stroke:#d4a95a;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;" />
                 </g>
             </svg>
 
-            <div class="preloader-lines">
-                <div class="tagline-line" data-delay="1200">Fine art · Portraits · Travel</div>
-                <div class="tagline-line" data-delay="1600">Be bold. Be Freezemoment.</div>
+            <div class="pre-text">
+                <div id="preline1" class="preline">Fine art · Portraits · Travel</div>
+                <div id="preline2" class="preline">Be bold. Be Freezemoment.</div>
             </div>
         </div>
     </div>
 
-    <!-- MAIN (hidden until preloader finishes) -->
-    <div class="main-content" id="main-content">
-        <!-- Full-screen menu -->
+    <div id="main-content" class="main-content" aria-hidden="true">
+        <!-- Accessible full-screen menu -->
         <nav id="site-menu" class="site-menu" role="dialog" aria-modal="true" aria-hidden="true">
-            <div class="site-menu-inner">
-                <button class="menu-close" id="menu-close" aria-label="Close menu">&times;</button>
+            <div class="site-menu-inner" role="document">
+                <button id="menu-close" class="menu-close" aria-label="Close menu">&times;</button>
 
                 <div class="menu-brand">
                     <div class="menu-logo">Freezemoment</div>
@@ -101,20 +85,21 @@
             </div>
         </nav>
 
-        <main id="main" aria-live="polite">
+        <main id="main" role="main">
             <!-- HERO -->
             <section id="home" class="hero" aria-label="Hero">
-                <div id="hero-bg" class="hero-bg" style="background-image:url('/assets/hero.jpg')"></div>
-                <div class="hero-overlay"></div>
+                <div id="hero-bg" class="hero-bg" style="background-image:url('/assets/hero.jpg')" aria-hidden="true">
+                </div>
+                <div class="hero-overlay" aria-hidden="true"></div>
 
                 <div class="hero-inner container-max">
                     <h1 id="hero-title" class="hero-title" tabindex="0">Photography that stays with you</h1>
                     <p class="hero-sub">Portraits · Travel · Editorial</p>
 
-                    <div class="scroll-indicator" id="scroll-indicator" title="Scroll to collections" role="button"
-                        aria-label="Scroll to collections">
+                    <div id="scroll-indicator" class="scroll-indicator" role="button" aria-label="Scroll to collections"
+                        title="Scroll to collections">
                         <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M12 16.5l-6-6 1.4-1.4L12 13.7l4.6-4.6L18 10.5z"></path>
+                            <path d="M12 16.5l-6-6 1.4-1.4L12 13.7l4.6-4.6L18 10.5z" />
                         </svg>
                     </div>
                 </div>
@@ -122,8 +107,8 @@
                 <div class="noise-overlay" aria-hidden="true"></div>
             </section>
 
-            <!-- PORTFOLIO -->
-            <section id="portfolio" class="gallery-section">
+            <!-- PORTFOLIO (collections grid rendered by main.js) -->
+            <section id="portfolio" class="gallery-section" aria-label="Collections">
                 <div class="container-max">
                     <div class="collections-header">
                         <div>
@@ -131,26 +116,25 @@
                             <p class="muted">Click a collection to open the full gallery.</p>
                         </div>
                     </div>
-
                     <div id="collections-grid" class="masonry" role="list" aria-live="polite"></div>
                 </div>
             </section>
 
-            <!-- collection view (hidden, populated by JS) -->
+            <!-- collection view -->
             <section id="collection-view" class="gallery-section" style="display:none;">
                 <div class="container-max" id="collection-content" aria-live="polite"></div>
             </section>
 
-            <!-- ABOUT -->
-            <section id="about" class="py-14 container-max about-section">
+            <!-- ABOUT: fixed layout (image left, text right on wide screens; stacked on small) -->
+            <section id="about" class="about-section container-max" aria-label="About">
                 <div class="about-grid">
                     <figure class="about-media">
                         <img src="/assets/about.jpg" alt="About the photographer" class="about-img" />
                         <figcaption class="about-card">
                             <h3 class="about-name">Freezemoment</h3>
                             <p class="about-role">Fine art & editorial photographer</p>
-                            <p class="about-desc">I work with natural light and audio cues to tell honest visual stories
-                                — editorial, weddings, portraiture and travel. Available for commissions worldwide.</p>
+                            <p class="about-desc">I work with natural light and honest storytelling — editorial,
+                                portraits and travel. Available for commissions worldwide.</p>
                             <div class="about-stats">
                                 <div><strong>10+</strong><span>Years</span></div>
                                 <div><strong>300+</strong><span>Projects</span></div>
@@ -161,33 +145,32 @@
             </section>
 
             <!-- CONTACT -->
-            <section id="contact" class="py-12 container-max contact-section">
+            <section id="contact" class="contact-section container-max" aria-label="Contact">
                 <div class="contact-card">
                     <div class="contact-left">
-                        <div class="contact-logo">
-                            <svg width="56" height="56" viewBox="0 0 56 56" aria-hidden="true" focusable="false">
-                                <circle cx="28" cy="28" r="28" fill="#D4A95A"></circle>
-                                <text x="50%" y="55%" alignment-baseline="middle" text-anchor="middle"
+                        <div class="contact-badge" aria-hidden="true">
+                            <svg width="56" height="56" viewBox="0 0 56 56">
+                                <circle cx="28" cy="28" r="28" fill="#D4A95A"></circle><text x="50%" y="55%"
+                                    alignment-baseline="middle" text-anchor="middle"
                                     font-family="Playfair Display, serif" font-size="20" fill="#071018">F</text>
                             </svg>
                         </div>
                         <div class="contact-links">
                             <a class="contact-link" href="https://instagram.com/yourhandle" target="_blank"
-                                rel="noreferrer"><span>@yourhandle</span></a>
-                            <a class="contact-link" href="tel:+447887335510"><span>+44 7887 335510</span></a>
-                            <a class="contact-link"
-                                href="mailto:hello@freeze-moment.com"><span>hello@freeze-moment.com</span></a>
+                                rel="noreferrer">@yourhandle</a>
+                            <a class="contact-link" href="tel:+447887335510">+44 7887 335510</a>
+                            <a class="contact-link" href="mailto:hello@freeze-moment.com">hello@freeze-moment.com</a>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <footer class="site-footer container-max"></footer>
+            <footer class="site-footer container-max" role="contentinfo"></footer>
         </main>
 
         <!-- LIGHTBOX -->
-        <div id="lightbox" class="lb-overlay" style="display:none;" role="dialog" aria-modal="true">
-            <div class="lb-inner" id="lb-inner">
+        <div id="lightbox" class="lb-overlay" role="dialog" aria-modal="true" style="display:none;">
+            <div class="lb-inner">
                 <img id="lb-image" class="lb-image" src="" alt="" />
                 <div id="lb-caption" class="lb-caption"></div>
                 <div class="lb-controls">
@@ -200,7 +183,6 @@
         </div>
     </div>
 
-    <!-- main script -->
     <script src="/main.js" defer></script>
 </body>
 
