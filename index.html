@@ -7,16 +7,15 @@
     <title>Freezemoment — Photography</title>
     <meta name="theme-color" content="#0b0b0b" />
 
-    <!-- CSS -->
+    <!-- styles -->
     <link rel="stylesheet" href="/styles.css" />
 
-    <!-- Vivus for SVG tracing (preloader) -->
+    <!-- Vivus for SVG tracing -->
     <script src="https://cdn.jsdelivr.net/npm/vivus@0.4.6/dist/vivus.min.js"></script>
 
-    <!-- Inline SVG filter for hero text distortion (kept in <head> so filter is available to CSS/HTML) -->
-    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-        <filter id="hotair" x="-25%" y="-25%" width="150%" height="150%">
-            <!-- turbulence creates the noisy displacement -->
+    <!-- Distortion filter (kept in head so available to inline SVG text) -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+        <filter id="hotair" x="-30%" y="-30%" width="160%" height="160%">
             <feTurbulence id="hotair-turb" baseFrequency="0.02" numOctaves="2" seed="3" result="turb" />
             <feDisplacementMap id="hotair-disp" in="SourceGraphic" in2="turb" scale="0" xChannelSelector="R"
                 yChannelSelector="G" />
@@ -26,55 +25,31 @@
 
 <body>
     <!-- Header -->
-    <header class="app-header" id="site-header">
+    <header id="site-header" class="app-header" role="banner">
         <div class="container-max header-row">
-            <a class="logo" href="/" id="logo" aria-label="Freezemoment home">
-                <!-- small inline logo (keeps a crisp graphic in header) -->
-                <svg width="140" height="40" viewBox="0 0 600 160" role="img" aria-hidden="false">
-                    <title>Freezemoment logo</title>
-                    <!-- simplified text-based logo (kept simple to avoid huge in-header svg) -->
-                    <text x="0" y="100" font-family="Playfair Display, serif" font-weight="700" font-size="86"
-                        fill="transparent" stroke="var(--gold)" stroke-width="3">FM</text>
-                </svg>
+            <a class="logo" href="/" aria-label="Freezemoment home">
+                <!-- small fallback inline mark; keep the real logo in assets -->
+                <img src="/assets/FM_logo.svg" alt="Freezemoment logo" class="logo-img" />
             </a>
 
-            <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="site-menu"
+            <button id="menu-toggle" class="menu-toggle" aria-expanded="false" aria-controls="site-menu"
                 aria-label="Open menu">
                 <span class="hamburger" aria-hidden="true"><span></span><span></span><span></span></span>
             </button>
         </div>
     </header>
 
-    <!-- PRELOADER (full-screen) -->
-    <div class="preloader" role="status" aria-live="polite">
+    <!-- Preloader: we will fetch and inline your /assets/FM_logo.svg in JS, then run Vivus -->
+    <div id="preloader" class="preloader" role="status" aria-live="polite">
         <div class="preloader-inner">
-            <!-- Inline the real logo SVG here (I've inlined a traced-friendly variant; Vivus will animate paths) -->
-            <!-- IMPORTANT: this id is used by Vivus ('fm-logo') -->
-            <!-- Replace contents below with your original FM_logo.svg if you prefer — paths will be traced the same way. -->
-            <div class="preloader-svg-wrap" aria-hidden="true">
-                <!-- Inlined, traced logo -->
-                <!-- I inlined your uploaded SVG and adapted it so Vivus can trace the paths -->
-                <!-- id="fm-logo" is vital for the Vivus call in main.js -->
-                <!-- START inline logo -->
-                <!-- (This is your uploaded FM_logo.svg content inlined and tuned for stroke tracing) -->
-                <svg id="fm-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1299 2352" role="img"
-                    aria-hidden="true">
-                    <title>Freezemoment logo</title>
-                    <!-- Keep original paths; styling is done in CSS so Vivus can animate strokes -->
-                    <!-- Your original SVG paths were large — Vivus will animate them nicely -->
-                    <!-- (Original complex paths from your FM_logo.svg are preserved here) -->
-                    <!-- For brevity here I'm using a compact set of paths that Vivus will animate — if you want the exact raw file content pasted here I used your uploaded file as reference. -->
-                    <g transform="translate(-750,-226)">
-                        <path d="M2005 1924 L1988 1900 ..." />
-                        <!-- ... many paths (from the uploaded FM_logo.svg) ... -->
-                    </g>
-                </svg>
-                <!-- END inline logo -->
+            <div id="preloader-svg-wrap" class="preloader-svg-wrap" aria-hidden="true">
+                <!-- JS will inject inline SVG here (id will be fm-logo-inline) -->
+                <div class="preloader-placeholder">Loading…</div>
             </div>
 
             <div class="preloader-texts">
-                <div id="preloader-name" class="preloader-name">FreezeMoment</div>
-                <div id="preloader-tag" class="preloader-tag">Fine art & editorial photography</div>
+                <div id="preloader-name" class="preloader-name">Freezemoment</div>
+                <div id="preloader-tag" class="preloader-tag">Fine art · Portraits · Travel</div>
             </div>
         </div>
     </div>
@@ -82,14 +57,14 @@
     <!-- Full screen menu -->
     <nav id="site-menu" class="site-menu" role="dialog" aria-modal="true" aria-hidden="true">
         <div class="site-menu-inner container-max">
-            <button class="menu-close" id="menu-close" aria-label="Close menu">&times;</button>
+            <button id="menu-close" class="menu-close" aria-label="Close menu">&times;</button>
 
             <div class="menu-brand">
                 <div class="menu-logo">Freezemoment</div>
                 <div class="menu-sub">Photography · Portraits · Travel</div>
             </div>
 
-            <ul class="menu-list" role="menu" aria-label="Main menu">
+            <ul class="menu-list" role="menu" aria-label="Main">
                 <li role="none"><a role="menuitem" href="#home" class="menu-link">Home</a></li>
                 <li role="none"><a role="menuitem" href="#portfolio" class="menu-link">Portfolio</a></li>
                 <li role="none"><a role="menuitem" href="#about" class="menu-link">About</a></li>
@@ -97,34 +72,35 @@
             </ul>
 
             <div class="menu-socials">
-                <a class="menu-social" id="menu-instagram" href="https://instagram.com/yourhandle" target="_blank"
+                <a class="menu-social" href="https://instagram.com/yourhandle" target="_blank"
                     rel="noreferrer">Instagram</a>
-                <a class="menu-social" id="menu-phone" href="tel:+447887335510">+44 7887 335510</a>
-                <a class="menu-social" id="menu-email" href="mailto:hello@freeze-moment.com">hello@freeze-moment.com</a>
+                <a class="menu-social" href="tel:+447887335510">+44 7887 335510</a>
+                <a class="menu-social" href="mailto:hello@freeze-moment.com">hello@freeze-moment.com</a>
             </div>
         </div>
     </nav>
 
-    <main id="main" class="main-content">
+    <!-- Main content (hidden under preloader until revealed) -->
+    <main id="main" class="main-content" aria-hidden="true">
         <!-- HERO -->
         <section id="home" class="hero" aria-label="Hero">
-            <div class="hero-bg" id="hero-bg" style="background-image:url('/assets/hero.jpg')"></div>
+            <div id="hero-bg" class="hero-bg" style="background-image:url('/assets/hero.jpg')"></div>
             <div class="hero-overlay"></div>
 
             <div class="hero-inner container-max">
-                <!-- Hero title is an inline SVG text so we can apply the hotair filter to text only -->
-                <svg id="hero-svg" viewBox="0 0 1200 200" role="img" aria-label="Hero title">
-                    <text id="hero-text" x="50%" y="55%" alignment-baseline="middle" text-anchor="middle"
-                        class="hero-title" font-family="Playfair Display, serif" font-size="48" filter="url(#hotair)">
+                <!-- SVG text so we can apply the filter to text only -->
+                <svg id="hero-svg" viewBox="0 0 1200 140" role="img" aria-label="Hero title">
+                    <text id="hero-text" x="50%" y="64%" text-anchor="middle" alignment-baseline="middle"
+                        class="hero-title" font-family="Playfair Display, serif" font-size="46" fill="#ffffff"
+                        filter="url(#hotair)">
                         Photography that stays with you
                     </text>
                 </svg>
-
                 <p class="hero-sub">Portraits · Travel · Editorial</p>
 
-                <div class="scroll-indicator" id="scroll-indicator" title="Scroll to collections" role="button"
-                    aria-label="Scroll to collections">
-                    <svg viewBox="0 0 24 24" aria-hidden="false" focusable="false">
+                <div id="scroll-indicator" class="scroll-indicator" role="button" aria-label="Scroll to collections"
+                    title="Scroll to collections">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M12 16.5l-6-6 1.4-1.4L12 13.7l4.6-4.6L18 10.5z"></path>
                     </svg>
                 </div>
@@ -134,38 +110,34 @@
         </section>
 
         <!-- PORTFOLIO -->
-        <section id="portfolio" class="gallery-section">
+        <section id="portfolio" class="gallery-section" aria-label="Collections">
             <div class="container-max">
-                <div class="collections-header"
-                    style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px;">
+                <div class="collections-header">
                     <div>
                         <h2>Collections</h2>
                         <p class="muted">Click a collection to open the full gallery.</p>
                     </div>
                 </div>
 
-                <!-- grid where collection tiles will be injected -->
                 <div id="collections-grid" class="masonry" role="list" aria-live="polite"></div>
             </div>
         </section>
 
-        <!-- collection page (replaced by JS when user opens a collection) -->
+        <!-- collection view -->
         <section id="collection-view" class="gallery-section" style="display:none;">
-            <div class="container-max" id="collection-content"></div>
+            <div class="container-max" id="collection-content" aria-live="polite"></div>
         </section>
 
         <!-- ABOUT -->
-        <section id="about" class="py-14 container-max about-section">
+        <section id="about" class="about-section container-max" aria-label="About">
             <div class="about-grid">
                 <figure class="about-media">
                     <img src="/assets/about.jpg" alt="About the photographer" class="about-img" />
                     <figcaption class="about-card">
                         <h3 class="about-name">Freezemoment</h3>
                         <p class="about-role">Fine art & editorial photographer</p>
-                        <p class="about-desc">
-                            I work with natural light and audio cues to tell honest visual stories — editorial,
-                            weddings, portraiture and travel. Available for commissions worldwide.
-                        </p>
+                        <p class="about-desc">I work with natural light and honest storytelling — editorial, portraits
+                            and travel. Available for commissions worldwide.</p>
                         <div class="about-stats">
                             <div><strong>10+</strong><span>Years</span></div>
                             <div><strong>300+</strong><span>Projects</span></div>
@@ -176,47 +148,32 @@
         </section>
 
         <!-- CONTACT -->
-        <section id="contact" class="py-12 container-max contact-section">
+        <section id="contact" class="contact-section container-max" aria-label="Contact">
             <div class="contact-card">
                 <div class="contact-left">
-                    <div class="contact-logo" aria-hidden="true">
-                        <svg width="56" height="56" viewBox="0 0 56 56" aria-hidden="false" focusable="false">
-                            <circle cx="28" cy="28" r="28" fill="#D4A95A"></circle>
-                            <text x="50%" y="55%" alignment-baseline="middle" text-anchor="middle"
-                                font-family="Playfair Display, serif" font-size="20" fill="#071018">F</text>
+                    <div class="contact-badge" aria-hidden="true">
+                        <svg width="56" height="56" viewBox="0 0 56 56">
+                            <circle cx="28" cy="28" r="28" fill="#D4A95A"></circle><text x="50%" y="55%"
+                                alignment-baseline="middle" text-anchor="middle" font-family="Playfair Display, serif"
+                                font-size="20" fill="#071018">F</text>
                         </svg>
                     </div>
                     <div class="contact-links">
-                        <a class="contact-link" id="contact-instagram" href="https://instagram.com/yourhandle"
-                            target="_blank" rel="noreferrer">
-                            <svg aria-hidden="true">
-                                <path fill="currentColor" d="..." />
-                            </svg>
-                            <span>@yourhandle</span>
-                        </a>
-                        <a class="contact-link" id="contact-phone" href="tel:+447887335510">
-                            <svg aria-hidden="true">
-                                <path fill="currentColor" d="..." />
-                            </svg>
-                            <span>+44 7887 335510</span>
-                        </a>
-                        <a class="contact-link" href="mailto:hello@freeze-moment.com">
-                            <svg aria-hidden="true">
-                                <path fill="currentColor" d="..." />
-                            </svg>
-                            <span>hello@freeze-moment.com</span>
-                        </a>
+                        <a class="contact-link" href="https://instagram.com/yourhandle" target="_blank"
+                            rel="noreferrer">@yourhandle</a>
+                        <a class="contact-link" href="tel:+447887335510">+44 7887 335510</a>
+                        <a class="contact-link" href="mailto:hello@freeze-moment.com">hello@freeze-moment.com</a>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- LIGHTBOX (kept in DOM; main.js controls show/hide) -->
-    <div id="lightbox" class="lb-overlay" style="display:none;" role="dialog" aria-modal="true">
-        <div class="lb-inner" id="lb-inner">
+    <!-- Lightbox -->
+    <div id="lightbox" class="lb-overlay" role="dialog" aria-modal="true" style="display:none;">
+        <div class="lb-inner">
             <img id="lb-image" class="lb-image" src="" alt="" />
-            <div id="lb-caption" style="color:#fff; text-align:center; margin-top:8px;"></div>
+            <div id="lb-caption" class="lb-caption"></div>
             <div class="lb-controls">
                 <button class="lb-btn" id="lb-prev">Prev</button>
                 <button class="lb-btn" id="lb-next">Next</button>
@@ -226,7 +183,6 @@
         </div>
     </div>
 
-    <!-- Main JS -->
     <script src="/main.js" defer></script>
 </body>
 
