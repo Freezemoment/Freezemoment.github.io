@@ -1,62 +1,32 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Freezemoment — Photography</title>
-    <meta name="theme-color" content="#0b0b0b" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreezeMoment — Photography</title>
 
-    <!-- styles -->
-    <link rel="stylesheet" href="/styles.css" />
-
-    <!-- Vivus for SVG tracing -->
-    <script src="https://cdn.jsdelivr.net/npm/vivus@0.4.6/dist/vivus.min.js"></script>
-
-    <!-- Distortion filter (kept in head so available to inline SVG text) -->
-    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-        <filter id="hotair" x="-30%" y="-30%" width="160%" height="160%">
-            <feTurbulence id="hotair-turb" baseFrequency="0.02" numOctaves="2" seed="3" result="turb" />
-            <feDisplacementMap id="hotair-disp" in="SourceGraphic" in2="turb" scale="0" xChannelSelector="R"
-                yChannelSelector="G" />
-        </filter>
-    </svg>
+    <link rel="stylesheet" href="/styles.css">
 </head>
 
 <body>
     <!-- Header -->
     <header id="site-header" class="app-header" role="banner">
-        <div class="container-max header-row">
+        <div class="header-row">
             <a class="logo" href="/" aria-label="Freezemoment home">
-                <!-- small fallback inline mark; keep the real logo in assets -->
                 <img src="/assets/FM_logo.svg" alt="Freezemoment logo" class="logo-img" />
             </a>
-
             <button id="menu-toggle" class="menu-toggle" aria-expanded="false" aria-controls="site-menu"
                 aria-label="Open menu">
                 <span class="hamburger" aria-hidden="true"><span></span><span></span><span></span></span>
             </button>
         </div>
     </header>
-
-    <!-- Preloader: we will fetch and inline your /assets/FM_logo.svg in JS, then run Vivus -->
-    <div id="preloader" class="preloader" role="status" aria-live="polite">
-        <div class="preloader-inner">
-            <div id="preloader-svg-wrap" class="preloader-svg-wrap" aria-hidden="true">
-                <!-- JS will inject inline SVG here (id will be fm-logo-inline) -->
-                <div class="preloader-placeholder">Loading…</div>
-            </div>
-
-            <div class="preloader-texts">
-                <div id="preloader-name" class="preloader-name">Freezemoment</div>
-                <div id="preloader-tag" class="preloader-tag">Fine art · Portraits · Travel</div>
-            </div>
-        </div>
-    </div>
+    <!-- Header Finish-->
 
     <!-- Full screen menu -->
     <nav id="site-menu" class="site-menu" role="dialog" aria-modal="true" aria-hidden="true">
-        <div class="site-menu-inner container-max">
+        <div class="site-menu-inner">
             <button id="menu-close" class="menu-close" aria-label="Close menu">&times;</button>
 
             <div class="menu-brand">
@@ -72,118 +42,43 @@
             </ul>
 
             <div class="menu-socials">
-                <a class="menu-social" href="https://instagram.com/yourhandle" target="_blank"
+                <a class="menu-social" href="https://instagram.com/freeze_moment_" target="_blank"
                     rel="noreferrer">Instagram</a>
                 <a class="menu-social" href="tel:+447887335510">+44 7887 335510</a>
-                <a class="menu-social" href="mailto:hello@freeze-moment.com">hello@freeze-moment.com</a>
+                <a class="menu-social" href="mailto:raj@freezemoment.co.uk">raj@freezemoment.co.uk</a>
             </div>
         </div>
     </nav>
+    <!-- Full screen menu Finish -->
 
-    <!-- Main content (hidden under preloader until revealed) -->
-    <main id="main" class="main-content" aria-hidden="true">
-        <!-- HERO -->
-        <section id="home" class="hero" aria-label="Hero">
-            <div id="hero-bg" class="hero-bg" style="background-image:url('/assets/hero.jpg')"></div>
-            <div class="hero-overlay"></div>
+    <!-- HERO -->
+    <section id="home" class="hero" aria-label="Hero">
+        <div id="hero-bg" class="hero-bg" style="background-image:url('/assets/hero.jpg')"></div>
+        <div class="hero-overlay"></div>
 
-            <div class="hero-inner container-max">
-                <!-- SVG text so we can apply the filter to text only -->
-                <svg id="hero-svg" viewBox="0 0 1200 140" role="img" aria-label="Hero title">
-                    <text id="hero-text" x="50%" y="64%" text-anchor="middle" alignment-baseline="middle"
-                        class="hero-title" font-family="Playfair Display, serif" font-size="46" fill="#ffffff"
-                        filter="url(#hotair)">
-                        Photography that stays with you
-                    </text>
+        <div class="hero-inner container-max">
+            <!-- SVG text so we can apply the filter to text only -->
+            <svg id="hero-svg" viewBox="0 0 1200 140" role="img" aria-label="Hero title">
+                <text id="hero-text" x="50%" y="64%" text-anchor="middle" alignment-baseline="middle" class="hero-title"
+                    font-family="Playfair Display, serif" font-size="46" fill="#ffffff" filter="url(#hotair)">
+                    Photography that stays with you
+                </text>
+            </svg>
+            <p class="hero-sub">Portraits · Travel · Editorial</p>
+
+            <div id="scroll-indicator" class="scroll-indicator" role="button" aria-label="Scroll to collections"
+                title="Scroll to collections">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 16.5l-6-6 1.4-1.4L12 13.7l4.6-4.6L18 10.5z"></path>
                 </svg>
-                <p class="hero-sub">Portraits · Travel · Editorial</p>
-
-                <div id="scroll-indicator" class="scroll-indicator" role="button" aria-label="Scroll to collections"
-                    title="Scroll to collections">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M12 16.5l-6-6 1.4-1.4L12 13.7l4.6-4.6L18 10.5z"></path>
-                    </svg>
-                </div>
-            </div>
-
-            <div class="noise-overlay" aria-hidden="true"></div>
-        </section>
-
-        <!-- PORTFOLIO -->
-        <section id="portfolio" class="gallery-section" aria-label="Collections">
-            <div class="container-max">
-                <div class="collections-header">
-                    <div>
-                        <h2>Collections</h2>
-                        <p class="muted">Click a collection to open the full gallery.</p>
-                    </div>
-                </div>
-
-                <div id="collections-grid" class="masonry" role="list" aria-live="polite"></div>
-            </div>
-        </section>
-
-        <!-- collection view -->
-        <section id="collection-view" class="gallery-section" style="display:none;">
-            <div class="container-max" id="collection-content" aria-live="polite"></div>
-        </section>
-
-        <!-- ABOUT -->
-        <section id="about" class="about-section container-max" aria-label="About">
-            <div class="about-grid">
-                <figure class="about-media">
-                    <img src="/assets/about.jpg" alt="About the photographer" class="about-img" />
-                    <figcaption class="about-card">
-                        <h3 class="about-name">Freezemoment</h3>
-                        <p class="about-role">Fine art & editorial photographer</p>
-                        <p class="about-desc">I work with natural light and honest storytelling — editorial, portraits
-                            and travel. Available for commissions worldwide.</p>
-                        <div class="about-stats">
-                            <div><strong>10+</strong><span>Years</span></div>
-                            <div><strong>300+</strong><span>Projects</span></div>
-                        </div>
-                    </figcaption>
-                </figure>
-            </div>
-        </section>
-
-        <!-- CONTACT -->
-        <section id="contact" class="contact-section container-max" aria-label="Contact">
-            <div class="contact-card">
-                <div class="contact-left">
-                    <div class="contact-badge" aria-hidden="true">
-                        <svg width="56" height="56" viewBox="0 0 56 56">
-                            <circle cx="28" cy="28" r="28" fill="#D4A95A"></circle><text x="50%" y="55%"
-                                alignment-baseline="middle" text-anchor="middle" font-family="Playfair Display, serif"
-                                font-size="20" fill="#071018">F</text>
-                        </svg>
-                    </div>
-                    <div class="contact-links">
-                        <a class="contact-link" href="https://instagram.com/yourhandle" target="_blank"
-                            rel="noreferrer">@yourhandle</a>
-                        <a class="contact-link" href="tel:+447887335510">+44 7887 335510</a>
-                        <a class="contact-link" href="mailto:hello@freeze-moment.com">hello@freeze-moment.com</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Lightbox -->
-    <div id="lightbox" class="lb-overlay" role="dialog" aria-modal="true" style="display:none;">
-        <div class="lb-inner">
-            <img id="lb-image" class="lb-image" src="" alt="" />
-            <div id="lb-caption" class="lb-caption"></div>
-            <div class="lb-controls">
-                <button class="lb-btn" id="lb-prev">Prev</button>
-                <button class="lb-btn" id="lb-next">Next</button>
-                <button class="lb-btn" id="lb-share">Share</button>
-                <button class="lb-btn" id="lb-close">Close</button>
             </div>
         </div>
-    </div>
 
-    <script src="/main.js" defer></script>
+        <div class="noise-overlay" aria-hidden="true"></div>
+    </section>
+    <!-- HERO Finish -->
+
+
 </body>
 
 </html>
