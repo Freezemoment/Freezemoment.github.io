@@ -90,9 +90,21 @@
 
     <!-- HERO -->
     <section id="home" class="hero-section section-max">
-        <div class="hero">
-            <div class="hero-img"><img src="assets/hero.jpg" alt="" /></div>
-            <h1>Digital architecture that rises from the void.</h1>
+        <div class="home-container">
+            <div class="home-hero">
+                <h1 class="home-title">Freeze the<br><span>Moment</span></h1>
+                <p class="home-tagline">
+                    Capturing timeless frames with bold light & raw emotions.
+                </p>
+                <div class="home-actions">
+                    <a href="#gallery" class="btn-ghost">View Gallery</a>
+                    <a href="#contact" class="btn-solid">Hire Me</a>
+                </div>
+            </div>
+
+            <div class="home-preview">
+                <img src="assets/menu-img-1.jpg" alt="Hero preview" />
+            </div>
         </div>
     </section>
     <!-- HERO Finish -->
@@ -108,7 +120,27 @@
     <!-- About me -->
     <section id="about" class="about-section section-max">
         <div class="about-container">
-            <h1>This is About container</h1>
+            <div class="about-grid">
+                <div class="about-media">
+                    <div class="about-preview-img">
+                        <img src="assets/menu-img-3.jpg" alt="About preview" />
+                    </div>
+                </div>
+                <div class="about-copy">
+                    <h2 class="big-title">About Me</h2>
+                    <p class="lead">
+                        I'm Raj — a photographer & visual storyteller who builds striking
+                        digital frames from real moments. I focus on architecture, portraits,
+                        and moody street scenes. My approach is simple: bold composition,
+                        patience, and light.
+                    </p>
+
+                    <ul class="about-links">
+                        <li><a href="#gallery" data-img="assets/menu-img-2.jpg">View Gallery</a></li>
+                        <li><a href="#contact" data-img="assets/menu-img-4.jpg">Work with me</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </section>
     <!-- About me finish -->
@@ -116,7 +148,32 @@
     <!-- contact me -->
     <section id="contact" class="contact-section section-max">
         <div class="contact-container">
-            <h1>This is Contact container</h1>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h2 class="big-title">Get in touch</h2>
+                    <p class="lead">Available for commissions and collaborations. Reach out below.</p>
+
+                    <div class="contact-socials">
+                        <a class="pill" href="mailto:Raj@FreezeMoment.com">Raj@FreezeMoment.com</a>
+                        <a class="pill" href="tel:+447440379896">+44 7440 379896</a>
+                        <a class="pill" href="https://instagram.com/freeze_moment_" target="_blank">Instagram</a>
+                    </div>
+                </div>
+
+                <form class="contact-form" action="#" method="post"
+                    onsubmit="alert('Thanks — demo only'); return false;">
+                    <label>
+                        <input type="text" name="name" placeholder="Your name" required />
+                    </label>
+                    <label>
+                        <input type="email" name="email" placeholder="Email" required />
+                    </label>
+                    <label>
+                        <textarea name="message" rows="6" placeholder="Tell me about your project" required></textarea>
+                    </label>
+                    <button class="btn-ghost" type="submit">Send message</button>
+                </form>
+            </div>
         </div>
     </section>
     <!-- contact me finish-->

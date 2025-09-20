@@ -242,4 +242,17 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
+
+    // optional: reuse menu preview for about-links hover
+    const localPreview = document.querySelector(".about-preview-img");
+    document.querySelectorAll(".about-links a[data-img]").forEach((a) => {
+        a.addEventListener("mouseover", () => {
+            const src = a.dataset.img;
+            if (!src) return;
+            const img = localPreview.querySelector("img");
+            img.src = src;
+            img.style.opacity = 0;
+            requestAnimationFrame(() => (img.style.opacity = 1));
+        });
+    });
 });
