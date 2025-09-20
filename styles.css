@@ -1,11 +1,13 @@
 :root {
     --gold: #d4a95a;
     --gold-2: #e6bd6e;
+    --header-height: 80px; /* fallback, updated by JS on load/resize */
 }
 
 /* common */
 html {
     scroll-behavior: smooth;
+    scroll-padding-top: var(--header-height); /* makes anchors stop below fixed header */
 }
 * {
     box-sizing: border-box;
@@ -303,7 +305,7 @@ nav {
 .hero-section {
     transform-origin: right top;
     will-change: transform;
-    scroll-margin-top: 5rem;
+    scroll-margin-top: var(--header-height); /* use header height for anchor offset */
 }
 
 .hero {
