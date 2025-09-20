@@ -4,13 +4,13 @@ import gsap from "https://cdn.skypack.dev/gsap";
 document.addEventListener("DOMContentLoaded", () => {
     // --- Header height handling (for anchor offset) ---
     function updateHeaderHeight() {
-        const nav = document.querySelector('nav');
+        const nav = document.querySelector("nav");
         const h = nav ? Math.ceil(nav.getBoundingClientRect().height) : 0;
-        document.documentElement.style.setProperty('--header-height', `${h}px`);
+        document.documentElement.style.setProperty("--header-height", `${h}px`);
     }
     // run on load and resize
     updateHeaderHeight();
-    window.addEventListener('resize', updateHeaderHeight);
+    window.addEventListener("resize", updateHeaderHeight);
 
     // --- elements ---
     const containers = document.querySelectorAll("section"); // animate all sections now
@@ -144,7 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function closeMenu(callback) {
         if (isAnimating || !isOpen) {
             // if already closed and callback provided, still call it
-            if (!isOpen && typeof callback === 'function') callback();
+            if (!isOpen && typeof callback === "function") callback();
             return;
         }
         isAnimating = true;
@@ -179,22 +179,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 isAnimating = false;
                 gsap.to([".link a", ".social a"], { y: "120%" });
                 resetPreviewImages();
-                if (typeof callback === 'function') callback();
+                if (typeof callback === "function") callback();
             },
         });
     }
 
     // helper: scroll to a hash target while accounting for header height
     function scrollToHash(hash) {
-        if (!hash || hash === '#') return;
+        if (!hash || hash === "#") return;
         const target = document.querySelector(hash);
         if (!target) return;
-        const nav = document.querySelector('nav');
-        const headerH = nav ? nav.getBoundingClientRect().height : 0;
-        const targetTop = target.getBoundingClientRect().top + window.pageYOffset;
-        const scrollTo = Math.max(0, targetTop - headerH);
-        window.scrollTo({ top: scrollTo, behavior: 'smooth' });
-        history.replaceState(null, '', hash);
+        // Let the browser handle offset via scroll-padding-top / scroll-margin-top
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+        history.replaceState(null, "", hash);
     }
 
     menuLinks.forEach((link) => {
@@ -230,14 +227,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // On click: close the menu first, then scroll to target
         link.addEventListener("click", (e) => {
-            const href = link.getAttribute('href') || '';
-            if (href.startsWith('#')) {
+            const href = link.getAttribute("href") || "";
+            if (href.startsWith("#")) {
                 e.preventDefault();
                 // close menu, then scroll
                 closeMenu(() => {
                     // tiny delay to ensure the menu overlay is gone visually
                     // but the callback already runs onComplete, so this is optional
-                    setTimeout(() => scrollToHash(href), 30);
+                    setTimeout(() => scrollToHash(href), 20);
                 });
             } else {
                 // if external or not a hash, just close
