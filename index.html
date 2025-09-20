@@ -2,83 +2,127 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FreezeMoment — Photography</title>
 
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/styles.css" />
 </head>
 
 <body>
-    <!-- Header -->
-    <header id="site-header" class="app-header" role="banner">
-        <div class="header-row">
-            <a class="logo" href="/" aria-label="Freezemoment home">
-                <img src="/assets/FM_logo.svg" alt="Freezemoment logo" class="logo-img" />
-            </a>
-            <button id="menu-toggle" class="menu-toggle" aria-expanded="false" aria-controls="site-menu"
-                aria-label="Open menu">
-                <span class="hamburger" aria-hidden="true"><span></span><span></span><span></span></span>
-            </button>
+    <!-- Loading Animation viewBox="0 0 1299.4453 2351.5469" -->
+    <!-- <div class="loading-page">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1051.3658 1902.5466">
+            <path class="svg-path"
+                d="M 525.68447,8.6060797 7.9026233,529.52397 34.761493,567.39849 c 15.44441,21.2836 23.69104,46.3942 24.32645,72.7769 v 622.41971 c -0.63541,26.1688 -8.88204,51.28 -24.32645,72.5529 l -26.8588697,37.8839 517.7818467,520.9086 517.77863,-520.9086 -26.862,-37.8839 c -15.4389,-21.2729 -23.68409,-46.3841 -24.32169,-72.5529 V 640.17539 c 0.6376,-26.3827 8.88279,-51.4933 24.32169,-72.7769 l 26.862,-37.87452 z"
+                id="path3" />
+            <path class="svg-path"
+                d="m 648.91498,1699.0064 -98.54966,98.5497 V 100.99544 l 428.75649,428.54078 c -21.4744,29.63937 -34.137,65.48047 -34.9998,104.55737 V 1264.458 c 0.8628,38.8612 13.5254,74.9289 34.9998,104.3525 l -133.5388,133.528 V 539.63171 l -48.9567,-48.95667 V 1551.2951 l -98.54967,98.5497 V 392.13611 l -49.16166,-49.17239 z"
+                id="path2" />
+            <path class="svg-path"
+                d="m 107.43951,1265.7415 c -0.85531,38.872 -13.524297,74.9288 -34.779837,104.3525 L 205.99029,1503.4278 V 999.74248 h 147.49558 v -98.5605 H 205.99029 V 540.91522 L 402.64963,344.25801 v 507.76237 l 98.55403,49.1616 V 102.28973 L 72.659673,530.81972 c 21.25554,29.63937 33.924527,65.49127 34.779837,104.56817 z"
+                id="path1" />
+        </svg>
+
+        <div class="name-container">
+            <div class="logo-name">FreezeMoment</div>
         </div>
-    </header>
-    <!-- Header Finish-->
 
-    <!-- Full screen menu -->
-    <nav id="site-menu" class="site-menu" role="dialog" aria-modal="true" aria-hidden="true">
-        <div class="site-menu-inner">
-            <button id="menu-close" class="menu-close" aria-label="Close menu">&times;</button>
+    </div> -->
+    <!-- Loading Animation finish -->
 
-            <div class="menu-brand">
-                <div class="menu-logo">Freezemoment</div>
-                <div class="menu-sub">Photography · Portraits · Travel</div>
-            </div>
-
-            <ul class="menu-list" role="menu" aria-label="Main">
-                <li role="none"><a role="menuitem" href="#home" class="menu-link">Home</a></li>
-                <li role="none"><a role="menuitem" href="#portfolio" class="menu-link">Portfolio</a></li>
-                <li role="none"><a role="menuitem" href="#about" class="menu-link">About</a></li>
-                <li role="none"><a role="menuitem" href="#contact" class="menu-link">Contact</a></li>
-            </ul>
-
-            <div class="menu-socials">
-                <a class="menu-social" href="https://instagram.com/freeze_moment_" target="_blank"
-                    rel="noreferrer">Instagram</a>
-                <a class="menu-social" href="tel:+447887335510">+44 7887 335510</a>
-                <a class="menu-social" href="mailto:raj@freezemoment.co.uk">raj@freezemoment.co.uk</a>
-            </div>
+    <!-- Navbar -->
+    <nav>
+        <div class="logo">
+            <a href="/">FreezeMoment</a>
+        </div>
+        <div class="menu-toggle">
+            <p id="menu-open">Menu</p>
+            <p id="menu-close">Close</p>
         </div>
     </nav>
+    <!-- Navbar Finish-->
+
+    <!-- Full screen menu -->
+    <div class="menu-overlay">
+        <div class="menu-content">
+            <div class="menu-items">
+                <div class="col-lg">
+                    <div class="menu-preview-img">
+                        <img src="assets/menu-img-1.jpg" alt="" />
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="menu-links">
+                        <div class="link">
+                            <a href="#home" data-img="assets/menu-img-1.jpg">Home</a>
+                        </div>
+                        <div class="link">
+                            <a href="#gallery" data-img="assets/menu-img-2.jpg">Gallery</a>
+                        </div>
+                        <div class="link">
+                            <a href="#about" data-img="assets/menu-img-3.jpg">About</a>
+                        </div>
+                        <div class="link">
+                            <a href="#contact" data-img="assets/menu-img-4.jpg">Contact</a>
+                        </div>
+                    </div>
+                    <div class="menu-socials">
+                        <div class="social"><a href="https://instagram.com/freeze_moment_">Instagram</a></div>
+                        <div class="social"><a href="https://wa.me/+447440379896">WhatsApp</a></div>
+                        <div class="social"><a href="tel:+447440379896">+44 7440 379896</a></div>
+                        <div class="social"><a href="mailto:Raj@FreezeMoment.com">Raj@FreezeMoment.com</a></div>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-footer">
+                <div class="col-lg">
+                    <a href="#">Run Sequence</a>
+                </div>
+                <div class="col-sm">
+                    <a href="#">Origin</a>
+                    <a href="#">Join Signal</a>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Full screen menu Finish -->
 
     <!-- HERO -->
-    <section id="home" class="hero" aria-label="Hero">
-        <div id="hero-bg" class="hero-bg" style="background-image:url('/assets/hero.jpg')"></div>
-        <div class="hero-overlay"></div>
-
-        <div class="hero-inner container-max">
-            <!-- SVG text so we can apply the filter to text only -->
-            <svg id="hero-svg" viewBox="0 0 1200 140" role="img" aria-label="Hero title">
-                <text id="hero-text" x="50%" y="64%" text-anchor="middle" alignment-baseline="middle" class="hero-title"
-                    font-family="Playfair Display, serif" font-size="46" fill="#ffffff" filter="url(#hotair)">
-                    Photography that stays with you
-                </text>
-            </svg>
-            <p class="hero-sub">Portraits · Travel · Editorial</p>
-
-            <div id="scroll-indicator" class="scroll-indicator" role="button" aria-label="Scroll to collections"
-                title="Scroll to collections">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M12 16.5l-6-6 1.4-1.4L12 13.7l4.6-4.6L18 10.5z"></path>
-                </svg>
-            </div>
+    <section id="home" class="hero-section section-max">
+        <div class="hero">
+            <div class="hero-img"><img src="assets/hero.jpg" alt="" /></div>
+            <h1>Digital architecture that rises from the void.</h1>
         </div>
-
-        <div class="noise-overlay" aria-hidden="true"></div>
     </section>
     <!-- HERO Finish -->
 
+    <!-- Gallery -->
+    <section id="gallery" class="gallery-section section-max">
+        <div class="gallery-container">
+            <h1>this is gallery container</h1>
+        </div>
+    </section>
+    <!-- Gallery finish -->
 
+    <!-- About me -->
+    <section id="about" class="about-section section-max">
+        <div class="about-container">
+            <h1>This is About container</h1>
+        </div>
+    </section>
+    <!-- About me finish -->
+
+    <!-- contact me -->
+    <section id="contact" class="contact-section section-max">
+        <div class="contact-container">
+            <h1>This is Contact container</h1>
+        </div>
+    </section>
+    <!-- contact me finish-->
+
+    <!-- java script file -->
+    <script type="module" src="/script.js"></script>
 </body>
 
 </html>
