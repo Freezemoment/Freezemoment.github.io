@@ -10,8 +10,8 @@
 </head>
 
 <body>
-    <!-- Loading Animation viewBox="0 0 1299.4453 2351.5469" -->
-    <!-- <div class="loading-page">
+    <!-- Loading Animation -->
+    <div class="loading-page">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1051.3658 1902.5466">
             <path class="svg-path"
                 d="M 525.68447,8.6060797 7.9026233,529.52397 34.761493,567.39849 c 15.44441,21.2836 23.69104,46.3942 24.32645,72.7769 v 622.41971 c -0.63541,26.1688 -8.88204,51.28 -24.32645,72.5529 l -26.8588697,37.8839 517.7818467,520.9086 517.77863,-520.9086 -26.862,-37.8839 c -15.4389,-21.2729 -23.68409,-46.3841 -24.32169,-72.5529 V 640.17539 c 0.6376,-26.3827 8.88279,-51.4933 24.32169,-72.7769 l 26.862,-37.87452 z"
@@ -27,12 +27,11 @@
         <div class="name-container">
             <div class="logo-name">FreezeMoment</div>
         </div>
-
-    </div> -->
+    </div>
     <!-- Loading Animation finish -->
 
     <!-- Navbar -->
-    <nav>
+    <nav class="nav-bar">
         <div class="logo">
             <a href="/">FreezeMoment</a>
         </div>
@@ -71,7 +70,7 @@
                         <div class="social"><a href="https://instagram.com/freeze_moment_">Instagram</a></div>
                         <div class="social"><a href="https://wa.me/+447440379896">WhatsApp</a></div>
                         <div class="social"><a href="tel:+447440379896">+44 7440 379896</a></div>
-                        <div class="social"><a href="mailto:Raj@FreezeMoment.com">Raj@FreezeMoment.com</a></div>
+                        <div class="social"><a href="mailto:Raj@FreezeMoment.co.uk">Raj@FreezeMoment.co.uk</a></div>
                     </div>
                 </div>
             </div>
@@ -97,8 +96,8 @@
                     Capturing timeless frames with bold light & raw emotions.
                 </p>
                 <div class="home-actions">
-                    <a href="#gallery" class="btn-ghost">View Gallery</a>
-                    <a href="#contact" class="btn-solid">Hire Me</a>
+                    <a href="#gallery" class="home-btn">View Gallery</a>
+                    <a href="#contact" class="home-btn">Hire Me</a>
                 </div>
             </div>
 
@@ -111,8 +110,28 @@
 
     <!-- Gallery -->
     <section id="gallery" class="gallery-section section-max">
-        <div class="gallery-container">
-            <h1>this is gallery container</h1>
+        <div class="gallery-wrap">
+            <div class="gallery-header">
+                <h2 class="big-title">Galleries</h2>
+            </div>
+
+            <nav class="gallery-cats" role="tablist" aria-label="Gallery categories"></nav>
+
+            <div class="gallery-stage">
+                <div class="gallery-grid" aria-live="polite"></div>
+                <div class="gallery-empty">Select a category to view photos</div>
+            </div>
+        </div>
+
+        <!-- Lightbox -->
+        <div class="glightbox" aria-hidden="true" role="dialog" aria-label="Image viewer">
+            <button class="gb-close" aria-label="Close (Esc)">&times;</button>
+            <button class="gb-prev" aria-label="Previous (Left)">&lsaquo;</button>
+            <div class="gb-media">
+                <img class="gb-img" src="" alt="" />
+                <figcaption class="gb-caption"></figcaption>
+            </div>
+            <button class="gb-next" aria-label="Next (Right)">&rsaquo;</button>
         </div>
     </section>
     <!-- Gallery finish -->
@@ -154,14 +173,14 @@
                     <p class="lead">Available for commissions and collaborations. Reach out below.</p>
 
                     <div class="contact-socials">
-                        <a class="pill" href="mailto:Raj@FreezeMoment.com">Raj@FreezeMoment.com</a>
+                        <a class="pill" href="mailto:Raj@FreezeMoment.co.uk">Raj@FreezeMoment.co.uk</a>
                         <a class="pill" href="tel:+447440379896">+44 7440 379896</a>
                         <a class="pill" href="https://instagram.com/freeze_moment_" target="_blank">Instagram</a>
                     </div>
                 </div>
 
-                <form class="contact-form" action="#" method="post"
-                    onsubmit="alert('Thanks — demo only'); return false;">
+                <form class="contact-form" action="https://formspree.io/f/meolyypd" method="post"
+                    onsubmit="alert('Thanks — I will get back to you.'); return false;">
                     <label>
                         <input type="text" name="name" placeholder="Your name" required />
                     </label>
@@ -171,7 +190,7 @@
                     <label>
                         <textarea name="message" rows="6" placeholder="Tell me about your project" required></textarea>
                     </label>
-                    <button class="btn-ghost" type="submit">Send message</button>
+                    <button class="submit-btn" type="submit">Send message</button>
                 </form>
             </div>
         </div>
