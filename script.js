@@ -8,12 +8,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const h = nav ? Math.ceil(nav.getBoundingClientRect().height) : 0;
         document.documentElement.style.setProperty("--header-height", `${h}px`);
     }
-    // run on load and resize
     updateHeaderHeight();
     window.addEventListener("resize", updateHeaderHeight);
 
     // --- elements ---
-    const containers = document.querySelectorAll("section"); // animate all sections now
+    const containers = document.querySelectorAll("section");
     const menuToggle = document.querySelector(".menu-toggle");
     const menuOverlay = document.querySelector(".menu-overlay");
     const menuContent = document.querySelector(".menu-content");
@@ -23,28 +22,16 @@ document.addEventListener("DOMContentLoaded", () => {
     let isOpen = false;
     let isAnimating = false;
 
+    // small entrance animations
     gsap.fromTo(
         ".loading-page",
         { opacity: 1 },
-        {
-            opacity: 0,
-            display: "none",
-            duration: 1.5,
-            delay: 3.5,
-        }
+        { opacity: 0, display: "none", duration: 1.5, delay: 3.5 }
     );
     gsap.fromTo(
         ".logo-name",
-        {
-            y: 50,
-            opacity: 0,
-        },
-        {
-            y: 0,
-            opacity: 1,
-            duration: 2,
-            delay: 0.5,
-        }
+        { y: 50, opacity: 0 },
+        { y: 0, opacity: 1, duration: 2, delay: 0.5 }
     );
 
     menuToggle.addEventListener("click", () => {
@@ -52,17 +39,18 @@ document.addEventListener("DOMContentLoaded", () => {
         else closeMenu();
     });
 
-    // safer cleanup: remove oldest images until we have at most 3
-    function cleanupPreviewImages() {
-        let previewImages = menuPreviewImg.querySelectorAll("img");
-        while (previewImages.length > 3) {
-            // remove first child (oldest)
-            menuPreviewImg.removeChild(previewImages[0]);
-            previewImages = menuPreviewImg.querySelectorAll("img");
+    // --- menu preview helpers ---
+    function cleanupImages(targetContainer) {
+        // limit to at most 3 images inside the container
+        let imgs = targetContainer.querySelectorAll("img");
+        while (imgs.length > 3) {
+            targetContainer.removeChild(imgs[0]);
+            imgs = targetContainer.querySelectorAll("img");
         }
     }
 
     function resetPreviewImages() {
+        if (!menuPreviewImg) return;
         menuPreviewImg.innerHTML = "";
         const defaultPreviewImg = document.createElement("img");
         defaultPreviewImg.src = "assets/menu-img-1.jpg";
@@ -98,7 +86,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (isAnimating || isOpen) return;
         isAnimating = true;
 
-        // animate all sections (previously only the hero)
         gsap.to(containers, {
             rotation: 10,
             x: 300,
@@ -140,10 +127,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // closeMenu accepts optional callback to run after menu finishes closing
     function closeMenu(callback) {
         if (isAnimating || !isOpen) {
-            // if already closed and callback provided, still call it
             if (!isOpen && typeof callback === "function") callback();
             return;
         }
@@ -184,105 +169,105 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // helper: scroll to a hash target while accounting for header height
     function scrollToHash(hash) {
         if (!hash || hash === "#") return;
         const target = document.querySelector(hash);
         if (!target) return;
-        // Let the browser handle offset via scroll-padding-top / scroll-margin-top
         target.scrollIntoView({ behavior: "smooth", block: "start" });
         history.replaceState(null, "", hash);
     }
 
-    menuLinks.forEach((link) => {
-        link.addEventListener("mouseover", () => {
-            if (!isOpen || isAnimating) return;
+    // --- menu links: preview on hover (existing behaviour) ---
+    if (menuLinks && menuPreviewImg) {
+        menuLinks.forEach((link) => {
+            link.addEventListener("mouseover", () => {
+                if (!isOpen || isAnimating) return;
 
-            const imgSrc = link.getAttribute("data-img");
-            if (!imgSrc) return;
+                const imgSrc = link.getAttribute("data-img");
+                if (!imgSrc) return;
 
-            const previewImages = menuPreviewImg.querySelectorAll("img");
-            if (
-                previewImages.length > 0 &&
-                previewImages[previewImages.length - 1].src.endsWith(imgSrc)
-            )
-                return;
+                const previewImages = menuPreviewImg.querySelectorAll("img");
+                // avoid duplicate same-src push (compare path ending)
+                if (
+                    previewImages.length > 0 &&
+                    previewImages[previewImages.length - 1].src.endsWith(imgSrc)
+                )
+                    return;
 
-            const newPreviewImg = document.createElement("img");
-            newPreviewImg.src = imgSrc;
-            newPreviewImg.style.opacity = "0";
-            newPreviewImg.style.transform = "scale(1.25) rotate(10deg)";
+                const newPreviewImg = document.createElement("img");
+                newPreviewImg.src = imgSrc;
+                newPreviewImg.style.opacity = "0";
+                newPreviewImg.style.transform = "scale(1.25) rotate(10deg)";
 
-            menuPreviewImg.appendChild(newPreviewImg);
-            cleanupPreviewImages();
+                menuPreviewImg.appendChild(newPreviewImg);
+                cleanupImages(menuPreviewImg);
 
-            gsap.to(newPreviewImg, {
-                opacity: 1,
-                scale: 1,
-                rotation: 0,
-                duration: 0.75,
-                ease: "power2.out",
-            });
-        });
-
-        // On click: close the menu first, then scroll to target
-        link.addEventListener("click", (e) => {
-            const href = link.getAttribute("href") || "";
-            if (href.startsWith("#")) {
-                e.preventDefault();
-                // close menu, then scroll
-                closeMenu(() => {
-                    // tiny delay to ensure the menu overlay is gone visually
-                    // but the callback already runs onComplete, so this is optional
-                    setTimeout(() => scrollToHash(href), 20);
+                gsap.to(newPreviewImg, {
+                    opacity: 1,
+                    scale: 1,
+                    rotation: 0,
+                    duration: 0.75,
+                    ease: "power2.out",
                 });
-            } else {
-                // if external or not a hash, just close
-                closeMenu();
-            }
-        });
-    });
+            });
 
-    // optional: reuse menu preview for about-links hover
-    const aboutPreviewImg = document.querySelector(".about-preview-img");
-    const aboutLinks = document.querySelector(".about-links a");
-    aboutLinks.forEach((link) => {
-        link.addEventListener("mouseover", () => {
-            const imgSrc = link.getAttribute("data-img");
-            if (!imgSrc) return;
-
-            const aboutImages = aboutPreviewImg.querySelectorAll("img");
-            if (
-                aboutImages.length > 0 &&
-                aboutImages[previewImages.length - 1].src.endsWith(imgSrc)
-            )
-                return;
-
-            const newAboutImg = document.createElement("img");
-            newAboutImg.src = imgSrc;
-            newAboutImg.style.opacity = "0";
-            newPreviewImg.style.transform = "scale(1.25) rotate(10deg)";
-
-            aboutPreviewImg.appendChild(newAboutImg);
-            // cleanupPreviewImages();
-
-            gsap.to(newAboutImg, {
-                opacity: 1,
-                scale: 1,
-                rotation: 0,
-                duration: 0.75,
-                ease: "power2.out",
+            link.addEventListener("click", (e) => {
+                const href = link.getAttribute("href") || "";
+                if (href.startsWith("#")) {
+                    e.preventDefault();
+                    closeMenu(() => {
+                        setTimeout(() => scrollToHash(href), 20);
+                    });
+                } else {
+                    closeMenu();
+                }
             });
         });
-    });
+    }
 
-    // --- gallery section ---
-    // Gallery loader + lightbox (expects /galleries/galleries.json)
+    // --- about links: show preview in the about-preview-img area (same animation) ---
+    const aboutPreviewImg = document.querySelector(".about-preview-img");
+    const aboutLinks = document.querySelectorAll(".about-links a");
+    if (aboutPreviewImg && aboutLinks && aboutLinks.length) {
+        aboutLinks.forEach((link) => {
+            link.addEventListener("mouseover", () => {
+                const imgSrc = link.getAttribute("data-img");
+                if (!imgSrc) return;
+
+                const aboutImages = aboutPreviewImg.querySelectorAll("img");
+                if (
+                    aboutImages.length > 0 &&
+                    aboutImages[aboutImages.length - 1].src.endsWith(imgSrc)
+                )
+                    return;
+
+                const newAboutImg = document.createElement("img");
+                newAboutImg.src = imgSrc;
+                newAboutImg.style.opacity = "0";
+                newAboutImg.style.transform = "scale(1.25) rotate(10deg)";
+                newAboutImg.style.position = "absolute";
+                aboutPreviewImg.appendChild(newAboutImg);
+                cleanupImages(aboutPreviewImg);
+
+                gsap.to(newAboutImg, {
+                    opacity: 1,
+                    scale: 1,
+                    rotation: 0,
+                    duration: 0.75,
+                    ease: "power2.out",
+                });
+            });
+        });
+    }
+
+    // --- gallery section loader + thumb hover animation ---
     (async function () {
         const CATS = document.querySelector(".gallery-cats");
         const GRID = document.querySelector(".gallery-grid");
         const EMPTY = document.querySelector(".gallery-empty");
         const LIGHTBOX = document.querySelector(".glightbox");
+        if (!CATS || !GRID || !EMPTY || !LIGHTBOX) return;
+
         const LB_IMG = LIGHTBOX.querySelector(".gb-img");
         const LB_CAP = LIGHTBOX.querySelector(".gb-caption");
         const BTN_CLOSE = LIGHTBOX.querySelector(".gb-close");
@@ -293,7 +278,6 @@ document.addEventListener("DOMContentLoaded", () => {
         let activeCollection = null;
         let activeIndex = 0;
 
-        // fetch galleries.json
         try {
             const res = await fetch("/galleries/galleries.json", {
                 cache: "no-cache",
@@ -304,7 +288,6 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // build category buttons
         function buildCats() {
             CATS.innerHTML = "";
             collections.forEach((col, i) => {
@@ -316,11 +299,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 btn.addEventListener("click", () => selectCat(i));
                 CATS.appendChild(btn);
             });
-            // auto-select first
             if (collections.length) selectCat(0);
         }
 
-        // render thumbnails for collection index
         function selectCat(idx) {
             activeCollection = collections[idx];
             Array.from(CATS.children).forEach((b, i) =>
@@ -341,12 +322,37 @@ document.addEventListener("DOMContentLoaded", () => {
                 a.innerHTML = `<img src="${imgObj.thumb}" alt="${
                     imgObj.caption || imgObj.name
                 }" loading="lazy" />`;
+
+                // click -> open lightbox
                 a.addEventListener("click", () => openLightbox(i));
+
+                // hover animation on thumb's img (match menu preview vibe)
+                const imgEl = a.querySelector("img");
+                if (imgEl) {
+                    imgEl.style.transformOrigin = "center center";
+                    imgEl.style.transition =
+                        "transform 0.6s cubic-bezier(0.2,0.9,0.3,1), opacity 0.5s";
+
+                    a.addEventListener("mouseenter", () => {
+                        // animate into focus
+                        gsap.fromTo(
+                            imgEl,
+                            { scale: 1.15, rotation: 8, opacity: 0.92 },
+                            {
+                                scale: 1,
+                                rotation: 0,
+                                opacity: 1,
+                                duration: 0.6,
+                                ease: "power2.out",
+                            }
+                        );
+                    });
+                }
+
                 GRID.appendChild(a);
             });
         }
 
-        // open lightbox at index
         function openLightbox(idx) {
             activeIndex = idx;
             const imgObj = activeCollection.images[activeIndex];
@@ -354,7 +360,6 @@ document.addEventListener("DOMContentLoaded", () => {
             LB_IMG.alt = imgObj.caption || imgObj.name;
             LB_CAP.textContent = imgObj.caption || imgObj.name || "";
             LIGHTBOX.setAttribute("aria-hidden", "false");
-            // preload neighbors
             preload(activeIndex + 1);
             preload(activeIndex - 1);
             document.body.style.overflow = "hidden";
@@ -385,7 +390,6 @@ document.addEventListener("DOMContentLoaded", () => {
             p.src = activeCollection.images[idx].src;
         }
 
-        // events
         BTN_CLOSE.addEventListener("click", closeLightbox);
         BTN_NEXT.addEventListener("click", () => showNext(1));
         BTN_PREV.addEventListener("click", () => showNext(-1));
@@ -402,6 +406,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
         buildCats();
     })();
-
-    // --- gallery section finish ---
 });
