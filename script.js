@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const CATS = document.querySelector(".gallery-cats");
     const GRID = document.querySelector(".gallery-grid");
     const EMPTY = document.querySelector(".gallery-empty");
-    const LIGHTBOX = document.querySelector(".glightbox");
 
     let isOpen = false;
     let isAnimating = false;
@@ -401,24 +400,55 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // create nodes (images are lazy via data-src)
         col.images.forEach((imgObj, i) => {
+            const imgA = document.createElement("a")
             const btn = document.createElement("button");
             btn.className = "gallery-thumb";
             btn.type = "button";
             btn.dataset.index = i;
+            // image placeholder; real image will be set from data-src by IntersectionObserver
             btn.innerHTML = `<img src="${PLACEHOLDER}" data-src="${
                 imgObj.thumb
             }" alt="${imgObj.caption || imgObj.name || ""}" loading="lazy" />`;
-            // click -> open lightbox
-            btn.addEventListener("click", () => openLightbox(i));
+
+            // minimal button reset so it doesn't look like a browser button
+            btn.style.background = "none";
+            btn.style.border = "0";
+            btn.style.padding = "0";
+            btn.style.cursor = "pointer";
 
             GRID.appendChild(btn);
 
-            // observe the img for reveal
+            // observe the img for reveal + setup hover handlers
             const imgEl = btn.querySelector("img");
             if (imgEl) {
+                // initial hidden state for reveal animation
                 imgEl.style.opacity = "0";
                 imgEl.style.transform = "scale(1.06)";
+                imgEl.style.transformOrigin = "center center";
+                imgEl.draggable = false;
+
+                // observe for lazy load / reveal
                 if (io) io.observe(imgEl);
+
+                // pointerenter/pointerleave is more consistent across touch/pointer devices
+                btn.addEventListener("pointerenter", () => {
+                    // bring a slight focus with scale -> 1 (clean easing)
+                    gsap.to(imgEl, {
+                        scale: 1.05,
+                        rotation: 0,
+                        duration: 0.6,
+                        ease: "power2.out",
+                    });
+                });
+                btn.addEventListener("pointerleave", () => {
+                    // subtle resting scale so there's a bit of depth
+                    gsap.to(imgEl, {
+                        scale: 1,
+                        rotation: 0,
+                        duration: 0.6,
+                        ease: "power2.out",
+                    });
+                });
             }
         });
 
@@ -435,85 +465,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 ease: "power2.out",
             }
         );
-    }
-
-    // lightbox utilities (kept but small adjustments)
-    if (LIGHTBOX) {
-        const LB_IMG = LIGHTBOX.querySelector(".gb-img");
-        const LB_CAP = LIGHTBOX.querySelector(".gb-caption");
-        const BTN_CLOSE = LIGHTBOX.querySelector(".gb-close");
-        const BTN_NEXT = LIGHTBOX.querySelector(".gb-next");
-        const BTN_PREV = LIGHTBOX.querySelector(".gb-prev");
-
-        function openLightbox(idx) {
-            activeIndex = idx;
-            if (
-                !activeCollection ||
-                !activeCollection.images ||
-                !activeCollection.images[activeIndex]
-            )
-                return;
-            const imgObj = activeCollection.images[activeIndex];
-            LB_IMG.src = imgObj.src || imgObj.thumb;
-            LB_IMG.alt = imgObj.caption || imgObj.name || "";
-            LB_CAP.textContent = imgObj.caption || imgObj.name || "";
-            LIGHTBOX.setAttribute("aria-hidden", "false");
-            preload(activeIndex + 1);
-            preload(activeIndex - 1);
-            document.body.style.overflow = "hidden";
-        }
-
-        function closeLightbox() {
-            LIGHTBOX.setAttribute("aria-hidden", "true");
-            const LBIMG = LIGHTBOX.querySelector(".gb-img");
-            if (LBIMG) LBIMG.src = "";
-            document.body.style.overflow = "";
-        }
-
-        function showNext(n = 1) {
-            if (!activeCollection) return;
-            activeIndex =
-                (activeIndex + n + activeCollection.images.length) %
-                activeCollection.images.length;
-            const img = activeCollection.images[activeIndex];
-            const LBIMG = LIGHTBOX.querySelector(".gb-img");
-            if (LBIMG) LBIMG.src = img.src || img.thumb;
-            const CAP = LIGHTBOX.querySelector(".gb-caption");
-            if (CAP) CAP.textContent = img.caption || img.name || "";
-            preload(activeIndex + 1);
-        }
-
-        function preload(idx) {
-            if (!activeCollection) return;
-            idx =
-                (idx + activeCollection.images.length) %
-                activeCollection.images.length;
-            const p = new Image();
-            p.src =
-                activeCollection.images[idx].src ||
-                activeCollection.images[idx].thumb;
-        }
-
-        // attach events
-        const LB_CLOSE = LIGHTBOX.querySelector(".gb-close");
-        const LB_NEXT = LIGHTBOX.querySelector(".gb-next");
-        const LB_PREV = LIGHTBOX.querySelector(".gb-prev");
-        if (LB_CLOSE) LB_CLOSE.addEventListener("click", closeLightbox);
-        if (LB_NEXT) LB_NEXT.addEventListener("click", () => showNext(1));
-        if (LB_PREV) LB_PREV.addEventListener("click", () => showNext(-1));
-        LIGHTBOX.addEventListener("click", (e) => {
-            if (e.target === LIGHTBOX) closeLightbox();
-        });
-        document.addEventListener("keydown", (e) => {
-            if (LIGHTBOX.getAttribute("aria-hidden") === "false") {
-                if (e.key === "Escape") closeLightbox();
-                if (e.key === "ArrowRight") showNext(1);
-                if (e.key === "ArrowLeft") showNext(-1);
-            }
-        });
-
-        // expose openLightbox to outer scope
-        window.openLightbox = openLightbox;
     }
 
     // initial load
