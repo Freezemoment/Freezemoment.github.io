@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const menuOverlay = document.querySelector(".menu-overlay");
     const menuContent = document.querySelector(".menu-content");
     const menuPreviewImg = document.querySelector(".menu-preview-img");
-    const menuLinks = document.querySelectorAll(".link a");
+    const menuLinks = document.querySelectorAll(".menu-links a");
 
     let isOpen = false;
     let isAnimating = false;
@@ -244,15 +244,35 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // optional: reuse menu preview for about-links hover
-    const localPreview = document.querySelector(".about-preview-img");
-    document.querySelectorAll(".about-links a[data-img]").forEach((a) => {
-        a.addEventListener("mouseover", () => {
-            const src = a.dataset.img;
-            if (!src) return;
-            const img = localPreview.querySelector("img");
-            img.src = src;
-            img.style.opacity = 0;
-            requestAnimationFrame(() => (img.style.opacity = 1));
+    const aboutPreviewImg = document.querySelector(".about-preview-img");
+    const aboutLinks = document.querySelector(".about-links a");
+    aboutLinks.forEach((link) => {
+        link.addEventListener("mouseover", () => {
+            const imgSrc = link.getAttribute("data-img");
+            if (!imgSrc) return;
+
+            const aboutImages = aboutPreviewImg.querySelectorAll("img");
+            if (
+                aboutImages.length > 0 &&
+                aboutImages[previewImages.length - 1].src.endsWith(imgSrc)
+            )
+                return;
+
+            const newAboutImg = document.createElement("img");
+            newAboutImg.src = imgSrc;
+            newAboutImg.style.opacity = "0";
+            newPreviewImg.style.transform = "scale(1.25) rotate(10deg)";
+
+            aboutPreviewImg.appendChild(newAboutImg);
+            // cleanupPreviewImages();
+
+            gsap.to(newAboutImg, {
+                opacity: 1,
+                scale: 1,
+                rotation: 0,
+                duration: 0.75,
+                ease: "power2.out",
+            });
         });
     });
 
@@ -320,9 +340,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 a.dataset.index = i;
                 a.innerHTML = `<img src="${imgObj.thumb}" alt="${
                     imgObj.caption || imgObj.name
-                }" loading="lazy" /><div class="thumb-meta">${
-                    imgObj.date || ""
-                }</div>`;
+                }" loading="lazy" />`;
                 a.addEventListener("click", () => openLightbox(i));
                 GRID.appendChild(a);
             });
