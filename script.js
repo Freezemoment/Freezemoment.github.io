@@ -477,4 +477,27 @@ document.addEventListener("DOMContentLoaded", () => {
         await loadCollections();
         if (CATS) buildCats();
     })();
+
+    // form submission.
+    document
+        .querySelector(".contact-form")
+        .addEventListener("submit", function (e) {
+            e.preventDefault(); // stop default submission
+            const form = this;
+
+            fetch(form.action, {
+                method: form.method,
+                body: new FormData(form),
+                headers: { Accept: "application/json" },
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        alert("Thanks — I will get back to you.");
+                        form.reset(); // clear the fields
+                    } else {
+                        alert("Oops! Something went wrong.");
+                    }
+                })
+                .catch(() => alert("Error: Unable to send form."));
+        });
 });
