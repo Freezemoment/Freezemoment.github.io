@@ -13,7 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // gallery refs
     const CATS = document.querySelector(".gallery-cats");
     const GRID = document.querySelector(".gallery-grid");
-    const EMPTY = document.querySelector(".gallery-empty");
 
     let isOpen = false;
     let isAnimating = false;
@@ -341,7 +340,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!res.ok) throw new Error("network");
             collections = await res.json();
         } catch (e) {
-            if (EMPTY) EMPTY.textContent = "Failed to load galleries.json";
+            console.error("Failed to load galleries.json", e);
             collections = [];
         }
     }
@@ -375,8 +374,8 @@ document.addEventListener("DOMContentLoaded", () => {
             gsap.to(oldThumbs, {
                 opacity: 0,
                 y: 20,
-                stagger: 0.03,
-                duration: 0.35,
+                stagger: 0.05,
+                duration: 0.7,
                 ease: "power2.in",
                 onComplete: () => {
                     GRID.innerHTML = "";
@@ -392,64 +391,70 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!GRID) return;
         GRID.innerHTML = "";
         if (!col || !col.images || !col.images.length) {
-            if (EMPTY) EMPTY.style.display = "block";
             return;
-        } else {
-            if (EMPTY) EMPTY.style.display = "none";
         }
 
         // create nodes (images are lazy via data-src)
         col.images.forEach((imgObj, i) => {
-            const imgA = document.createElement("a")
-            const btn = document.createElement("button");
-            btn.className = "gallery-thumb";
-            btn.type = "button";
-            btn.dataset.index = i;
-            // image placeholder; real image will be set from data-src by IntersectionObserver
-            btn.innerHTML = `<img src="${PLACEHOLDER}" data-src="${
-                imgObj.thumb
-            }" alt="${imgObj.caption || imgObj.name || ""}" loading="lazy" />`;
+            // Determine full image URL (try common fields)
+            const full =
+                imgObj.src ||
+                imgObj.full ||
+                imgObj.original ||
+                imgObj.large ||
+                imgObj.image ||
+                imgObj.url ||
+                imgObj.thumb; // fallback to thumb if no full provided
 
-            // minimal button reset so it doesn't look like a browser button
-            btn.style.background = "none";
-            btn.style.border = "0";
-            btn.style.padding = "0";
-            btn.style.cursor = "pointer";
+            // Create anchor that Fancybox will use
+            const a = document.createElement("a");
+            a.href = full;
+            // give each gallery a unique group name
+            const groupName = `gallery-${
+                col.id || col.label || ((colIndex) => colIndex)(i)
+            }`;
+            a.setAttribute("data-fancybox", groupName);
+            if (imgObj.caption) a.setAttribute("data-caption", imgObj.caption);
+            a.className = "gallery-thumb";
+            a.style.display = "inline-block";
+            a.style.textDecoration = "none";
 
-            GRID.appendChild(btn);
+            // create the img element (lazy via data-src)
+            const img = document.createElement("img");
+            img.src = PLACEHOLDER;
+            img.dataset.src =
+                imgObj.thumb || imgObj.thumbUrl || imgObj.tn || full;
+            img.alt = imgObj.caption || imgObj.name || "";
+            img.loading = "lazy";
+            img.draggable = false;
+            // initial hidden state for reveal animation
+            img.style.opacity = "0";
+            img.style.transform = "scale(1.06)";
+            img.style.transformOrigin = "center center";
+
+            a.appendChild(img);
+            GRID.appendChild(a);
 
             // observe the img for reveal + setup hover handlers
-            const imgEl = btn.querySelector("img");
-            if (imgEl) {
-                // initial hidden state for reveal animation
-                imgEl.style.opacity = "0";
-                imgEl.style.transform = "scale(1.06)";
-                imgEl.style.transformOrigin = "center center";
-                imgEl.draggable = false;
+            if (io) io.observe(img);
 
-                // observe for lazy load / reveal
-                if (io) io.observe(imgEl);
-
-                // pointerenter/pointerleave is more consistent across touch/pointer devices
-                btn.addEventListener("pointerenter", () => {
-                    // bring a slight focus with scale -> 1 (clean easing)
-                    gsap.to(imgEl, {
-                        scale: 1.05,
-                        rotation: 0,
-                        duration: 0.6,
-                        ease: "power2.out",
-                    });
+            // pointerenter/pointerleave is more consistent across touch/pointer devices
+            a.addEventListener("pointerenter", () => {
+                gsap.to(img, {
+                    scale: 1.05,
+                    rotation: 0,
+                    duration: 0.6,
+                    ease: "power2.out",
                 });
-                btn.addEventListener("pointerleave", () => {
-                    // subtle resting scale so there's a bit of depth
-                    gsap.to(imgEl, {
-                        scale: 1,
-                        rotation: 0,
-                        duration: 0.6,
-                        ease: "power2.out",
-                    });
+            });
+            a.addEventListener("pointerleave", () => {
+                gsap.to(img, {
+                    scale: 1,
+                    rotation: 0,
+                    duration: 0.6,
+                    ease: "power2.out",
                 });
-            }
+            });
         });
 
         // staggered entrance for the grid container items (subtle)
@@ -460,8 +465,8 @@ document.addEventListener("DOMContentLoaded", () => {
             {
                 opacity: 1,
                 y: 0,
-                stagger: 0.03,
-                duration: 0.6,
+                stagger: 0.05,
+                duration: 1,
                 ease: "power2.out",
             }
         );

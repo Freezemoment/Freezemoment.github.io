@@ -410,14 +410,6 @@ h1 {
     background: var(--gold);
     color: #000;
 }
-
-.gallery-empty {
-    display: block;
-    padding: 6rem 1rem;
-    color: #cfcfcf;
-    font-weight: 300;
-    text-align: center;
-}
 .gallery-grid {
     gap: 1rem;
     columns: 300px;

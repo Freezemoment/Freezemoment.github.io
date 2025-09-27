@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FreezeMoment — Photography</title>
 
+    <!-- Fancybox CSS (fancyapps) -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" /> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0/dist/fancybox/fancybox.css" />
+
     <link rel="stylesheet" href="/styles.css" />
 </head>
 
@@ -119,9 +123,9 @@
 
             <div class="gallery-stage">
                 <div class="gallery-grid" aria-live="polite"></div>
-                <div class="gallery-empty">Select a category to view photos</div>
             </div>
         </div>
+    </section>
     <!-- Gallery finish -->
 
     <!-- About me -->
@@ -165,10 +169,11 @@
                         <a class="pill" href="mailto:Raj@FreezeMoment.co.uk">Raj@FreezeMoment.co.uk</a>
                         <a class="pill" href="tel:+447440379896">+44 7440 379896</a>
                         <a class="pill" href="https://instagram.com/freeze_moment_" target="_blank">Instagram</a>
+                        <a class="pill" href="https://wa.me/+447440379896" target="_blank">WhatsApp</a>
                     </div>
                 </div>
 
-                <form class="contact-form" action="https://formspree.io/f/meolyypd" method="post"
+                <form class="contact-form" action="https://formspree.io/f/mwprvqlp" method="post"
                     onsubmit="alert('Thanks — I will get back to you.'); return false;">
                     <label>
                         <input type="text" name="name" placeholder="Your name" required />
@@ -185,6 +190,21 @@
         </div>
     </section>
     <!-- contact me finish-->
+
+    <!-- Fancybox UMD (exposes window.Fancybox) -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0/dist/fancybox/fancybox.umd.js"></script>
+
+
+    <script>
+        // Force modern UI (no docked thumbnail strip)
+        if (window.Fancybox) {
+            Fancybox.bind("[data-fancybox]", {
+                Toolbar: true,   // keep the modern top toolbar
+                dragToClose: true
+            });
+        }
+    </script>
 
     <!-- java script file -->
     <script type="module" src="/script.js"></script>
