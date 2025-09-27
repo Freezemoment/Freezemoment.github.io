@@ -4,17 +4,16 @@
 }
 
 /* common */
-html {
-    scroll-behavior: smooth;
-}
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
+html,
 body {
     overflow-x: hidden;
+    scroll-behavior: smooth;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
         Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
         sans-serif;
@@ -28,13 +27,15 @@ body {
     transform-origin: right top;
     will-change: transform;
     background-color: hsl(0, 0%, 6%);
-    width: 100vw;
+    padding: 4rem 2.5rem;
+    width: 100%;
     min-height: 100vh;
 }
 
 img {
+    display: block;
     width: 100%;
-    height: 100%;
+    height: auto;
     object-fit: cover;
 }
 
@@ -132,7 +133,7 @@ svg #path3 {
     align-items: center;
     z-index: 2;
     padding: 2.5em;
-    width: 100vw;
+    width: 100%;
 }
 
 .nav-bar::scroll-mark .logo a {
@@ -158,8 +159,8 @@ svg #path3 {
     position: fixed;
     z-index: 1;
     background-color: #0f0f0f;
-    width: 100vw;
-    height: 100svh;
+    width: 100%;
+    height: 100vh;
 }
 
 .menu-content {
@@ -305,8 +306,7 @@ svg #path3 {
 
 /* hero */
 .home-container {
-    display: grid;
-    grid-template-columns: 1.1fr 1fr;
+    display: flex;
     align-items: center;
     gap: 3rem;
     margin: 0 auto;
@@ -314,6 +314,12 @@ svg #path3 {
     width: 100%;
     max-width: 1300px;
     color: #fff;
+}
+.home-container > :nth-child(1) {
+    flex: 1;
+}
+.home-container > :nth-child(2) {
+    flex: 1.1;
 }
 
 .home-title {
@@ -379,12 +385,6 @@ h1 {
 
 /* --- gallery section --- */
 /* Gallery - site language */
-.gallery-wrap {
-    margin: 0 auto;
-    padding: 4rem 2.5rem;
-    max-width: 1300px;
-    color: #fff;
-}
 .gallery-header {
     margin-bottom: 1.75rem;
 }
@@ -405,7 +405,6 @@ h1 {
     font-weight: 600;
 }
 .gallery-cats button[aria-selected="true"] {
-    /* transform: translateY(-3px); */
     box-shadow: 0 0 10px var(--gold);
     background: var(--gold);
     color: #000;
@@ -439,14 +438,6 @@ h1 {
 
 /* --- About & Contact --- */
 /* About & Contact: menu-like language */
-.about-container,
-.contact-container {
-    padding: 4rem 2.5rem;
-    width: 100%;
-    max-width: 1300px;
-    color: #fff;
-}
-
 .about-grid,
 .contact-grid {
     display: grid;
@@ -570,33 +561,50 @@ h1 {
 
 /* mobile view */
 @media (max-width: 900px) {
+    .section-max {
+        padding: 3rem 1.5rem;
+    }
+    /* full screen menu */
+    .menu-items .col-lg {
+        display: none;
+    }
+    /* full screen menu finish */
+
+    /* home section */
     .hero h1 {
         width: 100%;
         font-size: 4rem;
         letter-spacing: 0;
     }
-    .menu-items .col-lg {
+    .home-container {
+        flex-direction: column-reverse;
+    }
+    /* home section finish */
+
+    /* gallery section */
+    .gallery-cats button {
+        font-size: 0.8rem;
+    }
+    .f-button.is-arrow{
         display: none;
     }
-    /* disable under line effect on mobile */
-    /* .link a::after,
-    .social a::after,
-    .menu-footer a::after {
-        display: none;
-    } */
+    /* gallery section finish */
 
-    /* about and contact mobile view */
+    /* about and contact section */
     .about-grid,
     .contact-grid {
         grid-template-columns: 1fr;
         gap: 1.75rem;
+    }
+    .contact-form {
+        padding: unset;
     }
     .about-preview-img {
         border-radius: 12px;
         height: 40vh;
     }
     .big-title {
-        font-size: 2.5rem;
+        font-size: 3.5rem;
     }
     .about-links a {
         font-size: 1.8rem;

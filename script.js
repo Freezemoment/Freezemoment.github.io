@@ -416,7 +416,6 @@ document.addEventListener("DOMContentLoaded", () => {
             a.setAttribute("data-fancybox", groupName);
             if (imgObj.caption) a.setAttribute("data-caption", imgObj.caption);
             a.className = "gallery-thumb";
-            a.style.display = "inline-block";
             a.style.textDecoration = "none";
 
             // create the img element (lazy via data-src)
