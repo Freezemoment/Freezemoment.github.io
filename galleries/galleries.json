@@ -1,0 +1,605 @@
+[
+  {
+    "id": "Creative",
+    "label": "Creative",
+    "cover": "/galleries/Creative/01.jpg",
+    "coverThumb": "/galleries/Creative/thumbs/01.jpg",
+    "images": [
+      {
+        "name": "01.jpg",
+        "src": "/galleries/Creative/01.jpg",
+        "thumb": "/galleries/Creative/thumbs/01.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "02.jpg",
+        "src": "/galleries/Creative/02.jpg",
+        "thumb": "/galleries/Creative/thumbs/02.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "03.jpg",
+        "src": "/galleries/Creative/03.jpg",
+        "thumb": "/galleries/Creative/thumbs/03.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "04.jpg",
+        "src": "/galleries/Creative/04.jpg",
+        "thumb": "/galleries/Creative/thumbs/04.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "05.jpg",
+        "src": "/galleries/Creative/05.jpg",
+        "thumb": "/galleries/Creative/thumbs/05.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "06.jpg",
+        "src": "/galleries/Creative/06.jpg",
+        "thumb": "/galleries/Creative/thumbs/06.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "07.jpg",
+        "src": "/galleries/Creative/07.jpg",
+        "thumb": "/galleries/Creative/thumbs/07.jpg",
+        "caption": "",
+        "date": null
+      }
+    ],
+    "metadata": null
+  },
+  {
+    "id": "Light painting",
+    "label": "Light painting",
+    "cover": "/galleries/Light painting/01.jpg",
+    "coverThumb": "/galleries/Light painting/thumbs/01.jpg",
+    "images": [
+      {
+        "name": "01.jpg",
+        "src": "/galleries/Light painting/01.jpg",
+        "thumb": "/galleries/Light painting/thumbs/01.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "02.jpg",
+        "src": "/galleries/Light painting/02.jpg",
+        "thumb": "/galleries/Light painting/thumbs/02.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "03.jpg",
+        "src": "/galleries/Light painting/03.jpg",
+        "thumb": "/galleries/Light painting/thumbs/03.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "04.jpg",
+        "src": "/galleries/Light painting/04.jpg",
+        "thumb": "/galleries/Light painting/thumbs/04.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "05.jpg",
+        "src": "/galleries/Light painting/05.jpg",
+        "thumb": "/galleries/Light painting/thumbs/05.jpg",
+        "caption": "",
+        "date": null
+      }
+    ],
+    "metadata": null
+  },
+  {
+    "id": "Maternity",
+    "label": "Maternity",
+    "cover": "/galleries/Maternity/01.JPG",
+    "coverThumb": "/galleries/Maternity/thumbs/01.jpg",
+    "images": [
+      {
+        "name": "01.JPG",
+        "src": "/galleries/Maternity/01.JPG",
+        "thumb": "/galleries/Maternity/thumbs/01.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "02.JPG",
+        "src": "/galleries/Maternity/02.JPG",
+        "thumb": "/galleries/Maternity/thumbs/02.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "03.JPG",
+        "src": "/galleries/Maternity/03.JPG",
+        "thumb": "/galleries/Maternity/thumbs/03.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "04.JPG",
+        "src": "/galleries/Maternity/04.JPG",
+        "thumb": "/galleries/Maternity/thumbs/04.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "05.JPG",
+        "src": "/galleries/Maternity/05.JPG",
+        "thumb": "/galleries/Maternity/thumbs/05.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "06.JPG",
+        "src": "/galleries/Maternity/06.JPG",
+        "thumb": "/galleries/Maternity/thumbs/06.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "07.jpg",
+        "src": "/galleries/Maternity/07.jpg",
+        "thumb": "/galleries/Maternity/thumbs/07.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "08.JPG",
+        "src": "/galleries/Maternity/08.JPG",
+        "thumb": "/galleries/Maternity/thumbs/08.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "09.JPG",
+        "src": "/galleries/Maternity/09.JPG",
+        "thumb": "/galleries/Maternity/thumbs/09.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "10.JPG",
+        "src": "/galleries/Maternity/10.JPG",
+        "thumb": "/galleries/Maternity/thumbs/10.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "11.JPG",
+        "src": "/galleries/Maternity/11.JPG",
+        "thumb": "/galleries/Maternity/thumbs/11.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "12.JPG",
+        "src": "/galleries/Maternity/12.JPG",
+        "thumb": "/galleries/Maternity/thumbs/12.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "13.JPG",
+        "src": "/galleries/Maternity/13.JPG",
+        "thumb": "/galleries/Maternity/thumbs/13.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "14.jpg",
+        "src": "/galleries/Maternity/14.jpg",
+        "thumb": "/galleries/Maternity/thumbs/14.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "15.jpg",
+        "src": "/galleries/Maternity/15.jpg",
+        "thumb": "/galleries/Maternity/thumbs/15.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "16.jpg",
+        "src": "/galleries/Maternity/16.jpg",
+        "thumb": "/galleries/Maternity/thumbs/16.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "17.JPG",
+        "src": "/galleries/Maternity/17.JPG",
+        "thumb": "/galleries/Maternity/thumbs/17.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "18.JPG",
+        "src": "/galleries/Maternity/18.JPG",
+        "thumb": "/galleries/Maternity/thumbs/18.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "19.JPG",
+        "src": "/galleries/Maternity/19.JPG",
+        "thumb": "/galleries/Maternity/thumbs/19.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "20.JPG",
+        "src": "/galleries/Maternity/20.JPG",
+        "thumb": "/galleries/Maternity/thumbs/20.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "21.JPG",
+        "src": "/galleries/Maternity/21.JPG",
+        "thumb": "/galleries/Maternity/thumbs/21.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "22.jpg",
+        "src": "/galleries/Maternity/22.jpg",
+        "thumb": "/galleries/Maternity/thumbs/22.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "23.JPG",
+        "src": "/galleries/Maternity/23.JPG",
+        "thumb": "/galleries/Maternity/thumbs/23.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "24.JPG",
+        "src": "/galleries/Maternity/24.JPG",
+        "thumb": "/galleries/Maternity/thumbs/24.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "25.JPG",
+        "src": "/galleries/Maternity/25.JPG",
+        "thumb": "/galleries/Maternity/thumbs/25.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "26.JPG",
+        "src": "/galleries/Maternity/26.JPG",
+        "thumb": "/galleries/Maternity/thumbs/26.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "27.JPG",
+        "src": "/galleries/Maternity/27.JPG",
+        "thumb": "/galleries/Maternity/thumbs/27.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "28.jpg",
+        "src": "/galleries/Maternity/28.jpg",
+        "thumb": "/galleries/Maternity/thumbs/28.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "29.JPG",
+        "src": "/galleries/Maternity/29.JPG",
+        "thumb": "/galleries/Maternity/thumbs/29.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "30.JPG",
+        "src": "/galleries/Maternity/30.JPG",
+        "thumb": "/galleries/Maternity/thumbs/30.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "31.JPG",
+        "src": "/galleries/Maternity/31.JPG",
+        "thumb": "/galleries/Maternity/thumbs/31.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "32.jpg",
+        "src": "/galleries/Maternity/32.jpg",
+        "thumb": "/galleries/Maternity/thumbs/32.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "33.JPG",
+        "src": "/galleries/Maternity/33.JPG",
+        "thumb": "/galleries/Maternity/thumbs/33.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "34.JPG",
+        "src": "/galleries/Maternity/34.JPG",
+        "thumb": "/galleries/Maternity/thumbs/34.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "35.JPG",
+        "src": "/galleries/Maternity/35.JPG",
+        "thumb": "/galleries/Maternity/thumbs/35.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "36.JPG",
+        "src": "/galleries/Maternity/36.JPG",
+        "thumb": "/galleries/Maternity/thumbs/36.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "37.JPG",
+        "src": "/galleries/Maternity/37.JPG",
+        "thumb": "/galleries/Maternity/thumbs/37.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "38.JPG",
+        "src": "/galleries/Maternity/38.JPG",
+        "thumb": "/galleries/Maternity/thumbs/38.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "39.JPG",
+        "src": "/galleries/Maternity/39.JPG",
+        "thumb": "/galleries/Maternity/thumbs/39.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "40.jpg",
+        "src": "/galleries/Maternity/40.jpg",
+        "thumb": "/galleries/Maternity/thumbs/40.jpg",
+        "caption": "",
+        "date": "2025-06-28"
+      },
+      {
+        "name": "41.jpg",
+        "src": "/galleries/Maternity/41.jpg",
+        "thumb": "/galleries/Maternity/thumbs/41.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "42.jpg",
+        "src": "/galleries/Maternity/42.jpg",
+        "thumb": "/galleries/Maternity/thumbs/42.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "43.jpg",
+        "src": "/galleries/Maternity/43.jpg",
+        "thumb": "/galleries/Maternity/thumbs/43.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "44.jpg",
+        "src": "/galleries/Maternity/44.jpg",
+        "thumb": "/galleries/Maternity/thumbs/44.jpg",
+        "caption": "",
+        "date": null
+      }
+    ],
+    "metadata": null
+  },
+  {
+    "id": "Portrait",
+    "label": "Portrait",
+    "cover": "/galleries/Portrait/01.jpg",
+    "coverThumb": "/galleries/Portrait/thumbs/01.jpg",
+    "images": [
+      {
+        "name": "01.jpg",
+        "src": "/galleries/Portrait/01.jpg",
+        "thumb": "/galleries/Portrait/thumbs/01.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "02.jpg",
+        "src": "/galleries/Portrait/02.jpg",
+        "thumb": "/galleries/Portrait/thumbs/02.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "03.jpg",
+        "src": "/galleries/Portrait/03.jpg",
+        "thumb": "/galleries/Portrait/thumbs/03.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "04.jpg",
+        "src": "/galleries/Portrait/04.jpg",
+        "thumb": "/galleries/Portrait/thumbs/04.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "05.jpg",
+        "src": "/galleries/Portrait/05.jpg",
+        "thumb": "/galleries/Portrait/thumbs/05.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "06.jpg",
+        "src": "/galleries/Portrait/06.jpg",
+        "thumb": "/galleries/Portrait/thumbs/06.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "07.jpg",
+        "src": "/galleries/Portrait/07.jpg",
+        "thumb": "/galleries/Portrait/thumbs/07.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "08.jpg",
+        "src": "/galleries/Portrait/08.jpg",
+        "thumb": "/galleries/Portrait/thumbs/08.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "09.jpg",
+        "src": "/galleries/Portrait/09.jpg",
+        "thumb": "/galleries/Portrait/thumbs/09.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "10.jpg",
+        "src": "/galleries/Portrait/10.jpg",
+        "thumb": "/galleries/Portrait/thumbs/10.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "11.jpg",
+        "src": "/galleries/Portrait/11.jpg",
+        "thumb": "/galleries/Portrait/thumbs/11.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "12.jpg",
+        "src": "/galleries/Portrait/12.jpg",
+        "thumb": "/galleries/Portrait/thumbs/12.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "13.jpg",
+        "src": "/galleries/Portrait/13.jpg",
+        "thumb": "/galleries/Portrait/thumbs/13.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "14.jpg",
+        "src": "/galleries/Portrait/14.jpg",
+        "thumb": "/galleries/Portrait/thumbs/14.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "15.jpg",
+        "src": "/galleries/Portrait/15.jpg",
+        "thumb": "/galleries/Portrait/thumbs/15.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "16.jpg",
+        "src": "/galleries/Portrait/16.jpg",
+        "thumb": "/galleries/Portrait/thumbs/16.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "17.jpg",
+        "src": "/galleries/Portrait/17.jpg",
+        "thumb": "/galleries/Portrait/thumbs/17.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "18.jpg",
+        "src": "/galleries/Portrait/18.jpg",
+        "thumb": "/galleries/Portrait/thumbs/18.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "19.jpg",
+        "src": "/galleries/Portrait/19.jpg",
+        "thumb": "/galleries/Portrait/thumbs/19.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "20.jpg",
+        "src": "/galleries/Portrait/20.jpg",
+        "thumb": "/galleries/Portrait/thumbs/20.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "21.jpg",
+        "src": "/galleries/Portrait/21.jpg",
+        "thumb": "/galleries/Portrait/thumbs/21.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "22.jpg",
+        "src": "/galleries/Portrait/22.jpg",
+        "thumb": "/galleries/Portrait/thumbs/22.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "23.jpg",
+        "src": "/galleries/Portrait/23.jpg",
+        "thumb": "/galleries/Portrait/thumbs/23.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "24.jpg",
+        "src": "/galleries/Portrait/24.jpg",
+        "thumb": "/galleries/Portrait/thumbs/24.jpg",
+        "caption": "",
+        "date": null
+      },
+      {
+        "name": "25.jpg",
+        "src": "/galleries/Portrait/25.jpg",
+        "thumb": "/galleries/Portrait/thumbs/25.jpg",
+        "caption": "",
+        "date": null
+      }
+    ],
+    "metadata": null
+  }
+]
